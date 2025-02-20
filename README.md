@@ -94,7 +94,23 @@ contract PBHKotH {
 - **Start Time:** `2025-02-28T05:00:00Z`
 - **End Time:** `2025-03-08T04:59:00Z`
 
+### Details
+This portion of the CTF event is focused on breaking PBH invariants. There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
 
+Any participant that submits a valid proof of concept and write-up showing that they are able break an invariant will be paid a bounty (up to a specific amount, amounts to be announced). 
+
+Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty.
+
+
+### Invariants
+
+- **PBH Transaction Limits**: Users must not be able to exceed `numPbhPerMonth` PBH transactions per month for a given **World ID**.
+
+- **PBH Gas per UserOp/Tx**: Individual PBH UserOps and transactions must not exceed `pbhGasLimit`.
+
+- **PBH Block Limit**: The sum of all PBH gas in a block should never surpass `pbhBlockCapacity`.
+
+- **PBH Ordering Rules**: World Chain blocks should always order all PBH transactions **before** any non-PBH transactions in a given block.
 
 ## PBH Testnet Configuration
 - `pbhNonceLimit`: 100
