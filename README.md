@@ -38,7 +38,7 @@ With the launch of Priority Blockspace for Humans (PBH) on World Chain Sepolia, 
 
 Priority Blockspace for Humans is a new transaction ordering policy on World Chain Sepolia that grants World ID holders top-of-block inclusion, reducing friction and making transactions fairer for real users.
 
-This CTF event will feature a warm-up game followed by a "break PBH" track where participants will try to break specific invariants related to PBH. A bounty of (amount to be announced) will be paid out to the winner of the warm-up game. Additionally, bounties (amounts to be announced) will be paid to participants that successfully break invariants specified below. 
+This CTF event will feature a warm-up game followed by a "Break PBH" track where participants will try to break specific invariants related to PBH. A bounty of (amount to be announced) will be paid out to the winner of the warm-up game. Additionally, bounties (amounts to be announced) will be paid to participants that successfully break invariants specified below. 
 
 To get familiar with PBH and the World Chain Builder, check out these links:
 - [PBH Docs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
@@ -112,7 +112,7 @@ This portion of the CTF event is focused on breaking PBH invariants. There are f
 
 Any participant that submits a valid proof of concept and write-up showing that they are able break an invariant will be paid a bounty (up to a specific amount, amounts to be announced). 
 
-There will be a bounty for each invariant that is broken (amounts to be announced). Participants that submit a valid proof of concept and write-up showing how to break an invariant will be eligible for a portion (or all) of the bounty.
+There will be a bounty to break each invariant (amounts to be announced). Participants that submit a valid proof of concept and write-up showing how to break an invariant will be eligible for a portion (or all) of the bounty.
 
 Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty.
 
@@ -120,7 +120,7 @@ Participants can submit findings via this link: (Link to be added)
 
 ### Invariants
 
-- **PBH Transaction Limits**: Users cannot exceed `numPbhPerMonth` PBH transactions per month, per World ID.
+- **PBH Transaction Limits**: Users cannot exceed `numPbhPerMonth` PBH transactions per month, for a given World ID.
 
 - **PBH Gas per UserOp/Tx**: No single PBH UserOp or PBH transaction can exceed `pbhGasLimit`.
 
