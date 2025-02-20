@@ -62,7 +62,7 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 - **End Time:** `2025-03-02T04:59:00Z`
 
 ### Details
-The warmup game is a simple "King of the Hill" game where participants race to call the `ctf()` function and increment a counter. Users will specify an address to be used as the key in the `leaderboard` mapping.
+The warm-up game is a simple "King of the Hill" game where participants race to call the `ctf()` function and increment a counter. Users will specify an address to be used as the key in the `leaderboard` mapping.
 
 Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty (Amount to be announced) on World Chain Mainnet.
 
