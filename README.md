@@ -31,6 +31,7 @@
                                                    \ \
 ```
 
+<br>
 
 ## Overview 
 With the launch of Priority Blockspace for Humans (PBH) on World Chain Sepolia, a PBH CTF event will take place from `2025-02-28T05:00:00Z` to `2025-03-08T04:59:00Z` to discover edge cases and observe interesting/unexpected outcomes.
@@ -44,6 +45,9 @@ To get familiar with PBH and the World Chain Builder, check out these links:
 - [World Chain Builder](https://github.com/worldcoin/world-chain/tree/main/world-chain-builder/crates/world)
     - [Transaction Validation](https://github.com/worldcoin/world-chain/blob/main/world-chain-builder/crates/world/pool/src/validator.rs#L180)
     - [Payload Builder](https://github.com/worldcoin/world-chain/blob/main/world-chain-builder/crates/world/payload/src/builder.rs#L208)
+
+<br>
+
 
 ## Getting a Testnet World ID
 To submit PBH transactions, you will need a Testnet World ID.
@@ -60,6 +64,8 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 
 **IMPORTANT:** Note that the semaphore key generated is not secure and is visible to the registration service. This Testnet identity should not be used for anything other than the PBH CTF event. In the event that you misplace your Testnet World ID, you can revisit the link above and follow the steps again at anytime to see your ID.
 
+
+<br>
 
 
 ## Warmup Game: PBH King of the Hill
@@ -95,7 +101,9 @@ contract PBHKotH {
 }
 ```
 
-## Break PBH
+<br>
+
+## Break PBH Track
 - **Start Time:** `2025-02-28T05:00:00Z`
 - **End Time:** `2025-03-08T04:59:00Z`
 
@@ -119,6 +127,8 @@ Participants can submit findings via this link: (Link to be added)
 - **PBH Ordering Rules**: All PBH transactions must be ordered before non-PBH transactions in a block.
 
 
+<br>
+
 ## PBH Testnet Configuration
 PBH on World Chain Sepolia will be configured with the following parameters.
 
@@ -129,12 +139,16 @@ PBH on World Chain Sepolia will be configured with the following parameters.
 - `verifiedBlockspaceCapacity`: 70%
     - The maximum amount of PBH gas in a block. This is calculated as a percentage of the block limit.
 
+<br>
+
 ## Important Links
 - [World Chain Builder](https://github.com/worldcoin/world-chain)
 - [PBH Specs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
 - [Inclusion Proof RPC endpoint](TODO:)
 - [World ID docs](https://docs.world.org/world-id/reference/contracts#usage)
 - [World Chain Sepolia Faucet](TODO:)
+
+<br>
 
 ## Testnet Contract Addresses
 - [WorldID](https://worldscan.org/TODO:): `TODO:`
