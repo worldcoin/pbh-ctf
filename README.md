@@ -41,7 +41,9 @@ This CTF event will feature a warm-up game followed by a "break PBH" track where
 
 To get familiar with PBH and the World Chain Builder, check out these links:
 - [PBH Docs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
-- [World Chain Builder](https://github.com/worldcoin/world-chain)
+- [World Chain Builder](https://github.com/worldcoin/world-chain/tree/main/world-chain-builder/crates/world)
+    - [Transaction Validation](https://github.com/worldcoin/world-chain/blob/main/world-chain-builder/crates/world/pool/src/validator.rs#L180)
+    - [Payload Builder](https://github.com/worldcoin/world-chain/blob/main/world-chain-builder/crates/world/payload/src/builder.rs#L208)
 
 ## Getting a Testnet World ID
 To submit PBH transactions, you will need a Testnet World ID.
