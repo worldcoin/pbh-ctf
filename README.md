@@ -112,6 +112,8 @@ This portion of the CTF event is focused on breaking PBH invariants. There are f
 
 Any participant that submits a valid proof of concept and write-up showing that they are able break an invariant will be paid a bounty (up to a specific amount, amounts to be announced). 
 
+There will be a bounty for each invariant that is broken (amounts to be announced). Participants that submit a valid proof of concept and write-up showing how to break an invariant will be eligible for a portion (or all) of the bounty.
+
 Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty.
 
 Participants can submit findings via this link: (Link to be added)
