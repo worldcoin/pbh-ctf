@@ -35,7 +35,8 @@ contract PBHKotH is IPBHKotH {
 
     /// @notice Function to attempt to capture the flag
     /// @dev This can only be called once per block
-    function ctf(address addr) public {
+    function ctf() public {
+        // Ensure game is still active
         require(block.timestamp < gameEnd, GameOver());
 
         // Ensure ctf hasnt been called yet this block
@@ -43,16 +44,16 @@ contract PBHKotH is IPBHKotH {
         latestBlock = uint128(block.timestamp);
 
         // Adjust the user's score
-        uint256 score = leaderboard[addr];
+        uint256 score = leaderboard[msg.sender];
         score += 1;
-        leaderboard[addr] = score;
+        leaderboard[msg.sender] = score;
 
         // Adjust high score/leader if score > highScore
         if (score > highScore) {
-            leader = addr;
+            leader = msg.sender;
             highScore = score;
         }
 
-        emit Ctf(addr, score);
+        emit Ctf(msg.sender, score);
     }
 }

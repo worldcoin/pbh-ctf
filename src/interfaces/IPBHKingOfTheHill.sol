@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 interface IPBHKotH {
-    function ctf(address addr) external;
+    function ctf() external;
     function gameEnd() external view returns (uint128);
     function latestBlock() external view returns (uint128);
     function leader() external view returns (address);
