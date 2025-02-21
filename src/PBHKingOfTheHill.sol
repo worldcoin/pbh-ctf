@@ -7,6 +7,9 @@ import {IPBHKotH} from "./interfaces/IPBHKingOfTheHill.sol";
 /// @notice A competitive game where participants try to be the first to increment a counter within a block.
 /// @dev The game lasts for 3 days, and the player with the highest score at the end wins.
 contract PBHKotH is IPBHKotH {
+    /// @notice The Address of the PBHEntryPoint contract.
+    address public immutable entryPoint = 0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6;
+
     /// @notice Timestamp marking the end of the game.
     uint128 public immutable gameEnd = uint128(block.timestamp) + 3 days;
 
@@ -45,7 +48,9 @@ contract PBHKotH is IPBHKotH {
 
         // Adjust the user's score
         uint256 score = leaderboard[msg.sender];
-        score += 1;
+
+        // PBH transactions are weighted 100:1
+        score = msg.sender == entryPoint ? score + 100 : score + 1;
         leaderboard[msg.sender] = score;
 
         // Adjust high score/leader if score > highScore

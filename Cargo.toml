@@ -14,15 +14,25 @@ members = [
 [workspace.dependencies]
 
 # worldcoin
-world-chain-builder-pbh = { git ="https://github.com/worldcoin/world-chain" }
-world-chain-builder-pool = { git = "https://github.com/worldcoin/world-chain"}
+world-chain-builder-pbh = { git ="https://github.com/worldcoin/world-chain", rev = "f737a35"}
+world-chain-builder-pool = { git = "https://github.com/worldcoin/world-chain", rev = "f737a35"}
+world-chain-builder-test-utils = { git = "https://github.com/worldcoin/world-chain", rev = "f737a35"}
+
 semaphore-rs = "0.3.1"
 
 alloy-primitives = { version = "0.8.20", default-features = false }
+alloy-sol-types = {version = "0.8.18", default-features = false }
+alloy-rpc-types-eth = { version = "0.11.1", default-features = false }
+alloy-signer-local = { version = "0.11.1", default-features = false }
+alloy-network = { version = "0.11.1", default-features = false }
+alloy-consensus = { version = "0.11.1", default-features = false }
 
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = "0.4"
 base64 = "0.22.1"
 eyre = { version = "0.6", package = "color-eyre" }
 reqwest = { version = "0.12", default-features = false }
-serde_json = "1"
+bon = "3.3.0"
+
