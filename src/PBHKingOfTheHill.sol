@@ -22,6 +22,9 @@ contract PBHKotH is IPBHKotH {
     /// @notice Mapping of player addresses to their scores.
     mapping(address addr => uint256 score) public leaderboard;
 
+    /// @notice Event emitted when a player successfully captures the flag.
+    event Ctf(address indexed addr, uint256 score);
+
     /// @notice Thrown when trying to call ctf after the game has ended.
     error GameOver();
 
@@ -49,5 +52,7 @@ contract PBHKotH is IPBHKotH {
             leader = addr;
             highScore = score;
         }
+
+        emit Ctf(addr, score);
     }
 }
