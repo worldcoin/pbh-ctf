@@ -1,6 +1,28 @@
-[package]
-name = "pbh-ctf"
+[workspace.package]
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
 
-[dependencies]
+[workspace]
+resolver = "2"
+members = [
+    "crates/pbh-ctf",
+    "crates/pbh-helpers",
+]
+
+[workspace.dependencies]
+
+# worldcoin
+world-chain-builder-pbh = { git ="https://github.com/worldcoin/world-chain" }
+world-chain-builder-pool = { git = "https://github.com/worldcoin/world-chain"}
+semaphore-rs = "0.3.1"
+
+alloy-primitives = { version = "0.8.20", default-features = false }
+
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+base64 = "0.22.1"
+eyre = { version = "0.6", package = "color-eyre" }
+reqwest = { version = "0.12", default-features = false }
+serde_json = "1"
