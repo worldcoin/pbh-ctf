@@ -114,30 +114,17 @@ pub async fn ctf_transaction_builder(
     #[builder(default = 20e10 as u128)] max_priority_fee_per_gas: u128,
     #[builder(default = WC_SEPOLIA_CHAIN_ID)] chain_id: u64,
 ) -> Result<TxEnvelope> {
-    let call = IMulticall3::Call3 {
-        target: PBH_CTF_CONTRACT,
-        callData: crate::bindings::IPBHKotH::ctfCall::SELECTOR.into(),
-        allowFailure: false,
-    };
-
-    let calls = vec![call];
-
-    let calldata = IPBHEntryPoint::pbhMulticallCall {
-        calls,
-        payload: PBHPayload::default().into(),
-    };
-
     let tx = TransactionRequest {
         nonce: Some(nonce),
         value: None,
-        to: Some(TxKind::Call(PBH_ENTRY_POINT)),
+        to: Some(TxKind::Call(PBH_CTF_CONTRACT)),
         gas: Some(gas_limit),
         max_fee_per_gas: Some(max_fee_per_gas),
         max_priority_fee_per_gas: Some(max_priority_fee_per_gas),
         chain_id: Some(chain_id),
         input: TransactionInput {
             input: None,
-            data: Some(calldata.abi_encode().into()),
+            data: Some(crate::bindings::IPBHKotH::ctfCall::SELECTOR.into()),
         },
         from: Some(signer.address()),
         ..Default::default()
