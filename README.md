@@ -146,14 +146,14 @@ PBH on World Chain Sepolia will be configured with the following parameters.
 ## Important Links
 - [World Chain Builder](https://github.com/worldcoin/world-chain)
 - [PBH Specs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
-- [Inclusion Proof RPC endpoint](TODO:)
+- [Inclusion Proof RPC endpoint](https://signup-orb-ethereum.stage-crypto.worldcoin.dev)
 - [World ID docs](https://docs.world.org/world-id/reference/contracts#usage)
-- [World Chain Sepolia Faucet](TODO:)
+- [World Chain Sepolia Faucet](https://www.alchemy.com/faucets/world-chain-sepolia)
 
 <br>
 
 ## Testnet Contract Addresses
-- [WorldID](https://worldscan.org/TODO:): `TODO:`
-- [PBHEntryPoint](https://worldscan.org/TODO:): `TODO:`
-- [PBHSignatureAggregator](https://worldscan.org/TODO:): `TODO:`
+- [WorldID](https://worldchain-sepolia.explorer.alchemy.com/address/0xE177F37AF0A862A02edFEa4F59C02668E9d0aAA4): `0xE177F37AF0A862A02edFEa4F59C02668E9d0aAA4`
+- [PBHEntryPoint](https://worldchain-sepolia.explorer.alchemy.com/address/0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6): `0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6`
+- [PBHSignatureAggregator](https://worldchain-sepolia.explorer.alchemy.com/address/0xED5dc9CDB270818dCec0784bBdc8094082f0eBcB): `0xED5dc9CDB270818dCec0784bBdc8094082f0eBcB`
 - [PBHKingOfTheHill](https://worldscan.org/TODO:): Address To Be Deployed
