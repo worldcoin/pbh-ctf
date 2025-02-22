@@ -17,7 +17,7 @@ contract PBHKotHTest is Test {
         pbhKingOfTheHill.ctf();
     }
 
-    function testCtf_RevertIf_tooLate() public {
+    function testCtf_RevertIf_TooLate() public {
         vm.warp(block.timestamp + 1);
         pbhKingOfTheHill.ctf();
         vm.prank(address(0xc0fee));
