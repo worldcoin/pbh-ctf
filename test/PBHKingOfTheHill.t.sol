@@ -31,13 +31,13 @@ contract PBHKotHTest is Test {
         assertEq(pbhKingOfTheHill.leader(), address(this));
         assertEq(pbhKingOfTheHill.highScore(), 1);
         assertEq(pbhKingOfTheHill.leaderboard(address(this)), 1);
-        vm.startPrank(address(0xc0fee));
+        vm.startPrank(address(0xc0ffee));
         vm.warp(block.timestamp + 2);
         pbhKingOfTheHill.ctf();
         vm.warp(block.timestamp + 3);
         pbhKingOfTheHill.ctf();
-        assertEq(pbhKingOfTheHill.leader(), address(0xc0fee));
+        assertEq(pbhKingOfTheHill.leader(), address(0xc0ffee));
         assertEq(pbhKingOfTheHill.highScore(), 2);
-        assertEq(pbhKingOfTheHill.leaderboard(address(0xc0fee)), 2);
+        assertEq(pbhKingOfTheHill.leaderboard(address(0xc0ffee)), 2);
     }
 }
