@@ -10,4 +10,9 @@ sol! {
         function highScore() external view returns (uint256);
         function leaderboard(address addr) external view returns (uint256);
     }
+
+    #[sol(rpc)]
+    interface IPBHEntryPoint {
+        function numPbhPerMonth() external view returns (uint8);
+    }
 }

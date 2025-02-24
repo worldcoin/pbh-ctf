@@ -2,4 +2,3 @@
 private_key = ""
 secret = ""
 provider = ""
-pbh_nonce_limit = 255

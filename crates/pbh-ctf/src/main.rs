@@ -11,8 +11,9 @@ use config::CtfConfig;
 use eyre::eyre::Result;
 use futures::{Stream, StreamExt};
 use pbh_helpers::{
-    Identity, PBH_CTF_CONTRACT, bindings::IPBHKotH::IPBHKotHInstance, ctf_transaction_builder,
-    pbh_ctf_transaction_builder,
+    Identity, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
+    bindings::{IPBHEntryPoint::IPBHEntryPointInstance, IPBHKotH::IPBHKotHInstance},
+    ctf_transaction_builder, pbh_ctf_transaction_builder,
 };
 use tracing::info;
 
@@ -26,13 +27,8 @@ async fn main() -> Result<()> {
 
     let provider = Arc::new(ProviderBuilder::new().on_http(config.provider.clone()));
 
-    let mut tx_stream = subscribe_and_prepare(
-        provider.clone(),
-        identity,
-        config.private_key,
-        config.pbh_nonce_limit,
-    )
-    .await?;
+    let mut tx_stream =
+        subscribe_and_prepare(provider.clone(), identity, config.private_key).await?;
 
     let (tx, rx) = tokio::sync::mpsc::channel(100);
     let tx_manager = TxManager {
@@ -66,7 +62,6 @@ async fn subscribe_and_prepare<P>(
     provider: Arc<P>,
     identity: Identity,
     private_key: String,
-    pbh_nonce_limit: u8,
 ) -> Result<Pin<Box<dyn Stream<Item = Result<Option<Bytes>>> + Send>>>
 where
     P: Provider + 'static,
@@ -75,6 +70,10 @@ where
     let pbh_koth = IPBHKotHInstance::new(PBH_CTF_CONTRACT, provider.clone());
     let game_start = pbh_koth.latestBlock().call().await?._0;
     let game_end = pbh_koth.gameEnd().call().await?._0;
+
+    // Fetch the pbh nonce limit
+    let pbh_entrypoint = IPBHEntryPointInstance::new(PBH_ENTRY_POINT, provider.clone());
+    let pbh_nonce_limit = pbh_entrypoint.numPbhPerMonth().call().await?._0;
 
     let signer = private_key.parse::<PrivateKeySigner>()?;
     let block_stream = provider.subscribe_blocks().await?.into_stream();
