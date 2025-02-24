@@ -1,8 +1,9 @@
 use alloy_sol_types::sol;
 
 sol! {
+    #[sol(rpc)]
     interface IPBHKotH {
-        function ctf() external;
+        function ctf(address receiver) external;
         function gameEnd() external view returns (uint128);
         function latestBlock() external view returns (uint128);
         function leader() external view returns (address);

@@ -3,6 +3,4 @@ private_key = ""
 wallet_nonce = 0
 secret = ""
 provider = ""
-start_timestamp = 0
-end_timestamp = 0
 pbh_nonce_limit = 255

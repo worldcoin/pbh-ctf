@@ -17,6 +17,7 @@ alloy-sol-types.workspace = true
 alloy-rpc-types-eth.workspace = true
 alloy-signer-local.workspace = true
 alloy-consensus.workspace = true
+alloy-contract.workspace = true
 
 serde.workspace = true
 serde_json.workspace = true

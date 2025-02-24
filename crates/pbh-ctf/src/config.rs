@@ -17,10 +17,6 @@ pub struct CtfConfig {
     pub secret: String,
     /// WC Sepolia Provider
     pub provider: Url,
-    /// The start timestamp of the game
-    pub start_timestamp: u64,
-    /// The end timestamp of the game
-    pub end_timestamp: u64,
 }
 
 impl CtfConfig {

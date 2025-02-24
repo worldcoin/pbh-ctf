@@ -14,7 +14,10 @@ contract PBHKotH is IPBHKotH {
     uint128 public immutable gameEnd = uint128(block.timestamp) + 3 days;
 
     /// @notice Timestamp marking the latest block a ctf call was made.
-    uint128 public latestBlock = uint128(block.timestamp);
+    uint128 public immutable gameStart;
+
+    /// @notice Latest block a ctf call was made. Marks the start of the CTF game.
+    uint128 public latestBlock;
 
     /// @notice Address of the current leader.
     address public leader;
@@ -34,11 +37,14 @@ contract PBHKotH is IPBHKotH {
     /// @notice Thrown when ctf is called more than once per block.
     error TooLate();
 
-    constructor() {}
+    /// @param _gameStart Timestamp of the start of the CTF game.
+    constructor(uint128 _gameStart) {
+        latestBlock = _gameStart;
+    }
 
     /// @notice Function to attempt to capture the flag
     /// @dev This can only be called once per block
-    function ctf() public {
+    function ctf(address receiver) public {
         // Ensure game is still active
         require(block.timestamp < gameEnd, GameOver());
 
@@ -49,16 +55,16 @@ contract PBHKotH is IPBHKotH {
         // Adjust the user's score
         uint256 score = leaderboard[msg.sender];
 
-        // PBH transactions are weighted 100:1
-        score = msg.sender == entryPoint ? score + 100 : score + 1;
-        leaderboard[msg.sender] = score;
+        // PBH transactions are weighted 400:1
+        score = msg.sender == entryPoint ? score + 400 : score + 1;
+        leaderboard[receiver] = score;
 
         // Adjust high score/leader if score > highScore
         if (score > highScore) {
-            leader = msg.sender;
+            leader = receiver;
             highScore = score;
         }
 
-        emit Ctf(msg.sender, score);
+        emit Ctf(receiver, score);
     }
 }

@@ -30,6 +30,7 @@ alloy-consensus = { version = "0.11.1", default-features = false }
 alloy-provider = { version = "0.11.1", default-features = false }
 alloy-transport = { version = "0.11.1", default-features = false }
 alloy-eips = { version = "0.11.1", default-features = false }
+alloy-contract = { version = "0.11.1", default-features = false }
 
 tokio = { version = "1", features = ["full"] }
 async-stream = "0.3.6"

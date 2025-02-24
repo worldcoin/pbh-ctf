@@ -10,7 +10,10 @@ use async_stream::stream;
 use config::CtfConfig;
 use eyre::eyre::Result;
 use futures::{Stream, StreamExt};
-use pbh_helpers::{Identity, ctf_transaction_builder, pbh_ctf_transaction_builder};
+use pbh_helpers::{
+    Identity, PBH_CTF_CONTRACT, bindings::IPBHKotH::IPBHKotHInstance, ctf_transaction_builder,
+    pbh_ctf_transaction_builder,
+};
 use tracing::info;
 
 mod config;
@@ -23,9 +26,14 @@ async fn main() -> Result<()> {
 
     let provider = Arc::new(ProviderBuilder::new().on_http(config.provider.clone()));
 
+    // Fetch the game start & game end
+    let pbh_koth = IPBHKotHInstance::new(PBH_CTF_CONTRACT, provider.clone());
+    let game_start = pbh_koth.latestBlock().call().await?;
+    let game_end = pbh_koth.gameEnd().call().await?;
+
     let mut tx_stream = subscribe_and_prepare(
-        config.start_timestamp,
-        config.end_timestamp,
+        game_start._0 as u64,
+        game_end._0 as u64,
         provider.clone(),
         identity,
         config.private_key,
