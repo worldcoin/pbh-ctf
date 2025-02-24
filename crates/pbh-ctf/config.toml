@@ -1,6 +1,5 @@
 [ctf_bot]
 private_key = ""
-wallet_nonce = 0
 secret = ""
 provider = ""
 pbh_nonce_limit = 255

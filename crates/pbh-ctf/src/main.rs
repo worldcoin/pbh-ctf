@@ -26,18 +26,10 @@ async fn main() -> Result<()> {
 
     let provider = Arc::new(ProviderBuilder::new().on_http(config.provider.clone()));
 
-    // Fetch the game start & game end
-    let pbh_koth = IPBHKotHInstance::new(PBH_CTF_CONTRACT, provider.clone());
-    let game_start = pbh_koth.latestBlock().call().await?;
-    let game_end = pbh_koth.gameEnd().call().await?;
-
     let mut tx_stream = subscribe_and_prepare(
-        game_start._0 as u64,
-        game_end._0 as u64,
         provider.clone(),
         identity,
         config.private_key,
-        config.wallet_nonce,
         config.pbh_nonce_limit,
     )
     .await?;
@@ -71,24 +63,29 @@ async fn main() -> Result<()> {
 
 /// Subscribes and streams new blocks from WorldChain Sepolia & Prepare CTF Transactions for submission
 async fn subscribe_and_prepare<P>(
-    game_start: u64,
-    game_end: u64,
     provider: Arc<P>,
     identity: Identity,
     private_key: String,
-    wallet_nonce: u64,
     pbh_nonce_limit: u8,
 ) -> Result<Pin<Box<dyn Stream<Item = Result<Option<Bytes>>> + Send>>>
 where
-    P: Provider,
+    P: Provider + 'static,
 {
+    // Fetch the game start & game end
+    let pbh_koth = IPBHKotHInstance::new(PBH_CTF_CONTRACT, provider.clone());
+    let game_start = pbh_koth.latestBlock().call().await?._0;
+    let game_end = pbh_koth.gameEnd().call().await?._0;
+
+    let signer = private_key.parse::<PrivateKeySigner>()?;
     let block_stream = provider.subscribe_blocks().await?.into_stream();
+
     Ok(Box::pin(stream! {
         tokio::pin!(block_stream);
-        let mut ctf_tx_builder = CtfTransactionBuilder::new(&private_key, wallet_nonce, pbh_nonce_limit, identity)?;
+        let wallet_nonce = provider.get_transaction_count(signer.address()).await?;
+        let mut ctf_tx_builder = CtfTransactionBuilder::new(signer, wallet_nonce, pbh_nonce_limit, identity)?;
 
         while let Some(header) = block_stream.next().await {
-            if header.timestamp > game_end || header.timestamp < game_start {
+            if header.timestamp > game_end as u64 || header.timestamp < game_start as u64 {
                 yield Ok(None);
             }
 
@@ -98,22 +95,20 @@ where
 }
 
 pub struct CtfTransactionBuilder {
-    pub signer: PrivateKeySigner,
-    pub wallet_nonce: u64,
-    pub pbh_nonce: u8,
-    pub pbh_nonce_limit: u8,
+    signer: PrivateKeySigner,
+    wallet_nonce: u64,
+    pbh_nonce: u8,
+    pbh_nonce_limit: u8,
     identity: Identity,
 }
 
 impl CtfTransactionBuilder {
     pub fn new(
-        private_key: &str,
+        signer: PrivateKeySigner,
         wallet_nonce: u64,
         pbh_nonce_limit: u8,
         identity: Identity,
     ) -> Result<Self> {
-        let signer = private_key.parse::<PrivateKeySigner>()?;
-
         Ok(Self {
             signer,
             wallet_nonce,

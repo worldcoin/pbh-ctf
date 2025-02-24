@@ -9,8 +9,6 @@ pub const CONFIG_PREFIX: &str = "CTF_BOT";
 pub struct CtfConfig {
     /// Ethereum Signer
     pub private_key: String,
-    /// The Wallet Nonce
-    pub wallet_nonce: u64,
     /// The PBH nonce limit
     pub pbh_nonce_limit: u8,
     /// Semaphore secret
