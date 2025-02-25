@@ -10835,7 +10835,7 @@ dependencies = [
 [[package]]
 name = "world-chain-builder-pbh"
 version = "0.1.0"
-source = "git+https://github.com/worldcoin/world-chain?rev=f737a35#f737a3510bf98b398e58c72381e7e0ed72f88b9a"
+source = "git+https://github.com/worldcoin/world-chain?rev=7a359d2#7a359d2e42f3bd8715ce5d13ed0faf6e983501c1"
 dependencies = [
  "alloy-primitives",
  "alloy-rlp",
@@ -10850,7 +10850,7 @@ dependencies = [
 [[package]]
 name = "world-chain-builder-test-utils"
 version = "0.1.0"
-source = "git+https://github.com/worldcoin/world-chain?rev=f737a35#f737a3510bf98b398e58c72381e7e0ed72f88b9a"
+source = "git+https://github.com/worldcoin/world-chain?rev=7a359d2#7a359d2e42f3bd8715ce5d13ed0faf6e983501c1"
 dependencies = [
  "alloy-consensus",
  "alloy-eips",

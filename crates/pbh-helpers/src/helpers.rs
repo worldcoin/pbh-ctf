@@ -33,9 +33,9 @@ pub struct InclusionProof {
 pub async fn pbh_ctf_transaction_builder(
     signer: PrivateKeySigner,
     identity: Identity,
-    #[builder(default = 0)] pbh_nonce: u8,
+    #[builder(default = 0)] pbh_nonce: u16,
     #[builder(default = 0)] nonce: u64,
-    #[builder(default = 50000)] gas_limit: u64,
+    #[builder(default = 130000)] gas_limit: u64,
     #[builder(default = 20e10 as u128)] max_fee_per_gas: u128,
     #[builder(default = 20e10 as u128)] max_priority_fee_per_gas: u128,
     #[builder(default = WC_SEPOLIA_CHAIN_ID)] chain_id: u64,
@@ -50,7 +50,11 @@ pub async fn pbh_ctf_transaction_builder(
 
     let call = IMulticall3::Call3 {
         target: PBH_CTF_CONTRACT,
-        callData: crate::bindings::IPBHKotH::ctfCall::SELECTOR.into(),
+        callData: crate::bindings::IPBHKotH::ctfCall {
+            receiver: signer.address(),
+        }
+        .abi_encode()
+        .into(),
         allowFailure: false,
     };
 
@@ -109,7 +113,7 @@ pub async fn pbh_ctf_transaction_builder(
 pub async fn ctf_transaction_builder(
     signer: PrivateKeySigner,
     #[builder(default = 0)] nonce: u64,
-    #[builder(default = 50000)] gas_limit: u64,
+    #[builder(default = 130000)] gas_limit: u64,
     #[builder(default = 20e10 as u128)] max_fee_per_gas: u128,
     #[builder(default = 20e10 as u128)] max_priority_fee_per_gas: u128,
     #[builder(default = WC_SEPOLIA_CHAIN_ID)] chain_id: u64,
@@ -124,7 +128,13 @@ pub async fn ctf_transaction_builder(
         chain_id: Some(chain_id),
         input: TransactionInput {
             input: None,
-            data: Some(crate::bindings::IPBHKotH::ctfCall::SELECTOR.into()),
+            data: Some(
+                crate::bindings::IPBHKotH::ctfCall {
+                    receiver: signer.address(),
+                }
+                .abi_encode()
+                .into(),
+            ),
         },
         from: Some(signer.address()),
         ..Default::default()

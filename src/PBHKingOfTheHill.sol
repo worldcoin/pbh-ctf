@@ -11,13 +11,10 @@ contract PBHKotH is IPBHKotH {
     address public immutable entryPoint = 0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6;
 
     /// @notice Timestamp marking the end of the game.
-    uint128 public immutable gameEnd = uint128(block.timestamp) + 3 days;
-
-    /// @notice Timestamp marking the latest block a ctf call was made.
-    uint128 public immutable gameStart;
+    uint256 public immutable gameEnd;
 
     /// @notice Latest block a ctf call was made. Marks the start of the CTF game.
-    uint128 public latestBlock;
+    uint256 public latestBlock;
 
     /// @notice Address of the current leader.
     address public leader;
@@ -38,22 +35,23 @@ contract PBHKotH is IPBHKotH {
     error TooLate();
 
     /// @param _gameStart Timestamp of the start of the CTF game.
-    constructor(uint128 _gameStart) {
+    constructor(uint256 _gameStart) {
         latestBlock = _gameStart;
+        gameEnd = _gameStart + 129600;
     }
 
     /// @notice Function to attempt to capture the flag
     /// @dev This can only be called once per block
     function ctf(address receiver) public {
         // Ensure game is still active
-        require(block.timestamp < gameEnd, GameOver());
+        require(block.number < gameEnd, GameOver());
 
         // Ensure ctf hasnt been called yet this block
-        require(block.timestamp > latestBlock, TooLate());
-        latestBlock = uint128(block.timestamp);
+        require(block.number > latestBlock, TooLate());
+        latestBlock = uint128(block.number);
 
         // Adjust the user's score
-        uint256 score = leaderboard[msg.sender];
+        uint256 score = leaderboard[receiver];
 
         // PBH transactions are weighted 400:1
         score = msg.sender == entryPoint ? score + 400 : score + 1;

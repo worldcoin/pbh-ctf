@@ -8,7 +8,7 @@ contract PBHKotHTest is Test {
     PBHKotH public pbhKingOfTheHill;
 
     function setUp() public {
-        pbhKingOfTheHill = new PBHKotH(uint128(block.timestamp));
+        pbhKingOfTheHill = new PBHKotH(block.number);
     }
 
     function test_Ctf_RevertIf_GameOver() public {

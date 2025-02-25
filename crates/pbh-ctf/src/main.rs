@@ -4,7 +4,7 @@ use std::{path::PathBuf, pin::Pin, sync::Arc};
 
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::Bytes;
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_signer_local::PrivateKeySigner;
 use async_stream::stream;
 use config::CtfConfig;
@@ -15,17 +15,25 @@ use pbh_helpers::{
     bindings::{IPBHEntryPoint::IPBHEntryPointInstance, IPBHKotH::IPBHKotHInstance},
     ctf_transaction_builder, pbh_ctf_transaction_builder,
 };
-use tracing::info;
+use reqwest::Url;
+
+use tracing::{error, info};
 
 mod config;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("config.toml");
+    tracing_subscriber::fmt::init();
+
+    let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("ctf_bot.toml");
     let config = CtfConfig::load(Some(config_path.as_path()))?;
     let identity = pbh_helpers::derive_identity(&config.secret)?;
 
-    let provider = Arc::new(ProviderBuilder::new().on_http(config.provider.clone()));
+    let provider = Arc::new(
+        ProviderBuilder::new()
+            .on_ws(WsConnect::new(config.provider.parse::<Url>()?))
+            .await?,
+    );
 
     let mut tx_stream =
         subscribe_and_prepare(provider.clone(), identity, config.private_key).await?;
@@ -50,8 +58,12 @@ async fn main() -> Result<()> {
     };
 
     tokio::select! {
-        _ = stream_fut => {},
-        _ = tx_manager_handle => {},
+        _ = stream_fut => {
+            error!("Stream ended unexpectedly");
+        },
+        _ = tx_manager_handle => {
+            error!("Tx Manager ended unexpectedly");
+        },
     }
 
     Ok(())
@@ -82,9 +94,10 @@ where
         tokio::pin!(block_stream);
         let wallet_nonce = provider.get_transaction_count(signer.address()).await?;
         let mut ctf_tx_builder = CtfTransactionBuilder::new(signer, wallet_nonce, pbh_nonce_limit, identity)?;
-
+        info!(game_start = ?game_start, game_end = ?game_end, "Subscribed to Blocks");
         while let Some(header) = block_stream.next().await {
-            if header.timestamp > game_end as u64 || header.timestamp < game_start as u64 {
+            info!(block_number = ?header.number, "New Block");
+            if header.number > game_end.to() || header.number < game_start.to() {
                 yield Ok(None);
             }
 
@@ -96,8 +109,8 @@ where
 pub struct CtfTransactionBuilder {
     signer: PrivateKeySigner,
     wallet_nonce: u64,
-    pbh_nonce: u8,
-    pbh_nonce_limit: u8,
+    pbh_nonce: u16,
+    pbh_nonce_limit: u16,
     identity: Identity,
 }
 
@@ -105,19 +118,20 @@ impl CtfTransactionBuilder {
     pub fn new(
         signer: PrivateKeySigner,
         wallet_nonce: u64,
-        pbh_nonce_limit: u8,
+        pbh_nonce_limit: u16,
         identity: Identity,
     ) -> Result<Self> {
         Ok(Self {
             signer,
             wallet_nonce,
             pbh_nonce_limit,
-            pbh_nonce: 0,
+            pbh_nonce: 1,
             identity,
         })
     }
 
     async fn prepare_ctf_tx(&mut self) -> Result<Option<Bytes>> {
+        info!("Preparing CTF Transaction");
         let ctf_transaction = if self.pbh_nonce >= self.pbh_nonce_limit {
             ctf_transaction_builder()
                 .nonce(self.wallet_nonce)
@@ -127,6 +141,7 @@ impl CtfTransactionBuilder {
         } else {
             let tx = pbh_ctf_transaction_builder()
                 .nonce(self.wallet_nonce)
+                .pbh_nonce(self.pbh_nonce)
                 .signer(self.signer.clone())
                 .identity(self.identity.clone())
                 .call()
@@ -151,9 +166,16 @@ where
 {
     pub async fn run(mut self) -> Result<()> {
         while let Some(tx) = self.receiver.recv().await {
-            let builder = self.provider.send_raw_transaction(&tx).await?;
-            let receipt = builder.get_receipt().await?;
-            info!(hash = %receipt.transaction_hash, "Receipt received for Transaction")
+            let builder = self.provider.send_raw_transaction(&tx).await.map_err(|e| {
+                error!(error = ?e, "Error sending transaction");
+                e
+            })?;
+
+            let receipt = builder.get_receipt().await.map_err(|e| {
+                error!(error = ?e, "Error getting receipt");
+                e
+            })?;
+            info!(hash = %receipt.transaction_hash, "Receipt received for Transaction");
         }
 
         Ok(())

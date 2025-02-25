@@ -1,6 +1,5 @@
 use std::path::Path;
 
-use reqwest::Url;
 use serde::Deserialize;
 
 pub const CONFIG_PREFIX: &str = "CTF_BOT";
@@ -12,7 +11,7 @@ pub struct CtfConfig {
     /// Semaphore secret
     pub secret: String,
     /// WC Sepolia Provider
-    pub provider: Url,
+    pub provider: String,
 }
 
 impl CtfConfig {
