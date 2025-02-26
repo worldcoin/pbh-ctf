@@ -1,15 +1,18 @@
 use std::path::Path;
 
+use alloy_primitives::Address;
 use serde::Deserialize;
 
-pub const CONFIG_PREFIX: &str = "CTF_BOT";
+pub const CONFIG_PREFIX: &str = "PBH_CTF";
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct CTFConfig {
     /// Semaphore secret
     pub semaphore_secret: String,
     /// WC Sepolia Provider
-    pub provider: String,
+    pub provider_uri: String,
+    /// Address of the player to keep score on the leaderboard
+    pub player_address: Address,
 }
 
 impl CTFConfig {

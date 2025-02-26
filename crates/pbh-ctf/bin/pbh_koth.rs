@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let signer = private_key.parse::<PrivateKeySigner>()?;
     let provider = Arc::new(
         ProviderBuilder::new()
-            .on_ws(WsConnect::new(config.provider.parse::<Url>()?))
+            .on_ws(WsConnect::new(config.provider_uri.parse::<Url>()?))
             .await?,
     );
 

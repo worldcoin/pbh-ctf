@@ -1,2 +1,3 @@
-secret = ""
-provider = ""
+semaphore_secret = ""
+provider_uri = ""
+player_address = ""
