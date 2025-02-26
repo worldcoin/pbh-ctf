@@ -33,13 +33,31 @@
 
 <br>
 
+# Table of Contents
+
+- [Overview](#overview)
+- [Docs](#docs)
+- [Getting a Testnet World ID](#getting-a-testnet-world-id)
+- [Warmup Game: PBH King of the Hill](#warmup-game-pbh-king-of-the-hill)
+  - [Details](#details)
+- [Break PBH Track](#break-pbh-track)
+  - [Details](#details-1)
+  - [Invariants](#invariants)
+- [PBH Testnet Configuration](#pbh-testnet-configuration)
+- [Important Links](#important-links)
+- [Testnet Contract Addresses](#testnet-contract-addresses)
+
+<br>
+
 ## Overview 
 With the launch of Priority Blockspace for Humans (PBH) on World Chain Sepolia, a PBH CTF event will take place from `2025-02-28T05:00:00Z` to `2025-03-08T04:59:00Z` to discover edge cases and observe interesting/unexpected outcomes.
 
 Priority Blockspace for Humans is a new transaction ordering policy on World Chain Sepolia that grants World ID holders top-of-block inclusion, reducing friction and making transactions fairer for real users.
 
-This CTF event will feature a warm-up game followed by a "Break PBH" track where participants will try to break specific invariants related to PBH. A bounty of (amount to be announced) will be paid out to the winner of the warm-up game. Additionally, bounties (amounts to be announced) will be paid to participants that successfully break invariants specified below. 
+This CTF event will feature a warm-up game followed by a "Break PBH" track where participants will try to break specific invariants related to PBH.
 
+
+## Docs
 To get familiar with PBH and the World Chain Builder, check out these links:
 - [PBH Docs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
 - [World Chain Builder](https://github.com/worldcoin/world-chain/tree/main/world-chain-builder/crates/world)
@@ -67,7 +85,6 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 
 <br>
 
-
 ## Warmup Game: PBH King of the Hill
 - **Start Time:** `2025-02-28T05:00:00Z`
 - **End Time:** `2025-03-02T04:59:00Z`
@@ -75,28 +92,39 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 ### Details
 The warm-up game is a simple "King of the Hill" game where participants race to call the `ctf()` function and increment a counter. Users will specify an address to be used as the key in the `leaderboard` mapping.
 
-Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty (Amount to be announced) on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
+Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
+
+The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](t.me/pbhctf). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block `10152556`), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.  
+A bounty of $3k USDC will be paid out on World Chain Mainnet to the winner of the warm-up game. 
 
 ```solidity
 contract PBHKotH {
     // --snip--
+
     /// @notice Function to attempt to capture the flag
-    function ctf(address addr) public {
-        require(block.timestamp < gameEnd, GameOver());
+    /// @dev This can only be called once per block
+    function ctf(address receiver) public {
+        // Ensure game is still active
+        require(block.number < gameEnd, GameOver());
 
         // Ensure ctf hasnt been called yet this block
-        require(block.timestamp > lastBlock, TooLate());
-        lastBlock = uint128(block.timestamp);
+        require(block.number > latestBlock, TooLate());
+        latestBlock = uint128(block.number);
 
         // Adjust the user's score
-        uint256 score = leaderboard[addr];
-        score += 1;
-        leaderboard[addr] = score;
+        uint256 score = leaderboard[receiver];
 
+        // PBH transactions are weighted 400:1
+        score = msg.sender == entryPoint ? score + 400 : score + 1;
+        leaderboard[receiver] = score;
+
+        // Adjust high score/leader if score > highScore
         if (score > highScore) {
-            leader = addr;
+            leader = receiver;
             highScore = score;
         }
+
+        emit Ctf(receiver, score);
     }
 }
 ```
@@ -108,17 +136,24 @@ contract PBHKotH {
 - **End Time:** `2025-03-08T04:59:00Z`
 
 ### Details
-This portion of the CTF event is focused on breaking PBH invariants. There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
+This portion of the CTF event is focused on breaking PBH invariants. 
+There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
+It is important to note that if the builder block is not selected, these conditions are not enforced.
 
-Any participant that submits a valid proof of concept and write-up showing that they are able break an invariant will be paid a bounty (up to a specific amount, amounts to be announced). 
+The **total bounty for each invariant is capped at $10k**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
 
-There will be a bounty to break each invariant (amounts to be announced). Participants that submit a valid proof of concept and write-up showing how to break an invariant will be eligible for a portion (or all) of the bounty.
+Bounty distribution will follow the rules below:
+- Each submission will be evaluated for validity and severity of impact. The **total bounty for each invariant is capped at $10k**. 
+- If multiple participants submit the **same finding**, only the first valid submission will be evaluated for a bounty.
+- If multiple participants break an invariant in **distinctly different ways**, each submission will be evaluated for a separate bounty.
+- If there are `n` distinct valid findings for an invariant, the **total bounty for that invariant remains capped at $10k**, and each submission will be evaluated for a bounty.
 
-Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty.
 
 Participants can submit findings via this link: (Link to be added)
 
 ### Invariants
+
+For any block built by the World Chain Builder, the following invariants must hold. It is important to note that if the builder block is not selected, these conditions are not enforced. 
 
 - **PBH Transaction Limits**: Users cannot exceed `numPbhPerMonth` PBH transactions per month, for a given World ID.
 
@@ -127,7 +162,6 @@ Participants can submit findings via this link: (Link to be added)
 - **PBH Block Limit**: The total PBH gas in a block must not exceed `pbhBlockCapacity`.
 
 - **PBH Ordering Rules**: All PBH transactions must be ordered before non-PBH transactions in a block.
-
 
 <br>
 
