@@ -5169,44 +5169,30 @@ checksum = "df94ce210e5bc13cb6651479fa48d14f601d9858cfe0467f43ae157023b938d3"
 name = "pbh-ctf"
 version = "0.1.0"
 dependencies = [
+ "alloy-consensus",
+ "alloy-contract",
  "alloy-eips",
  "alloy-network",
  "alloy-primitives",
  "alloy-provider",
- "alloy-signer-local",
- "alloy-transport",
- "async-stream",
- "color-eyre",
- "config",
- "futures",
- "pbh-helpers",
- "reqwest 0.12.12",
- "serde",
- "tokio",
- "tracing",
- "tracing-subscriber 0.3.19",
-]
-
-[[package]]
-name = "pbh-helpers"
-version = "0.1.0"
-dependencies = [
- "alloy-consensus",
- "alloy-contract",
- "alloy-network",
- "alloy-primitives",
  "alloy-rpc-types-eth",
  "alloy-signer-local",
  "alloy-sol-types",
+ "alloy-transport",
+ "async-stream",
  "base64 0.22.1",
  "bon",
  "chrono",
  "color-eyre",
+ "config",
+ "futures",
  "reqwest 0.12.12",
  "semaphore-rs",
  "serde",
  "serde_json",
  "tokio",
+ "tracing",
+ "tracing-subscriber 0.3.19",
  "world-chain-builder-pbh",
  "world-chain-builder-test-utils",
 ]

@@ -6,7 +6,7 @@ license = "MIT"
 
 [workspace]
 resolver = "2"
-members = ["crates/pbh-ctf", "crates/pbh-helpers"]
+members = ["crates/pbh-ctf"]
 
 [workspace.dependencies]
 
@@ -14,8 +14,6 @@ members = ["crates/pbh-ctf", "crates/pbh-helpers"]
 world-chain-builder-pbh = { git = "https://github.com/worldcoin/world-chain", rev = "7a359d2" }
 world-chain-builder-pool = { git = "https://github.com/worldcoin/world-chain", rev = "7a359d2" }
 world-chain-builder-test-utils = { git = "https://github.com/worldcoin/world-chain", rev = "7a359d2" }
-pbh-helpers = { path = "crates/pbh-helpers" }
-
 semaphore-rs = "0.3.1"
 
 alloy-primitives = { version = "0.8.20", default-features = false }

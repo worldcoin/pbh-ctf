@@ -14,5 +14,6 @@ sol! {
     #[sol(rpc)]
     interface IPBHEntryPoint {
         function numPbhPerMonth() external view returns (uint16);
+        function nullifierHashes(uint256) external view returns (bool);
     }
 }
