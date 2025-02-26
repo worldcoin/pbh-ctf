@@ -54,7 +54,7 @@ With the launch of Priority Blockspace for Humans (PBH) on World Chain Sepolia, 
 
 Priority Blockspace for Humans is a new transaction ordering policy on World Chain Sepolia that grants World ID holders top-of-block inclusion, reducing friction and making transactions fairer for real users.
 
-This CTF event will feature a warm-up game followed by a "Break PBH" track where participants will try to break specific invariants related to PBH. A bounty of (amount to be announced) will be paid out to the winner of the warm-up game. Additionally, bounties (amounts to be announced) will be paid to participants that successfully break invariants specified below. 
+This CTF event will feature a warm-up game followed by a "Break PBH" track where participants will try to break specific invariants related to PBH.
 
 
 ## Docs
@@ -94,7 +94,7 @@ The warm-up game is a simple "King of the Hill" game where participants race to 
 
 Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty (Amount to be announced) on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
 
-The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](t.me/pbhctf). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block `10152556`), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.
+The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](t.me/pbhctf). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block `10152556`), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.  A bounty of $3k USDC will be paid out to the winner of the warm-up game. 
 
 ```solidity
 contract PBHKotH {
@@ -135,13 +135,22 @@ contract PBHKotH {
 - **End Time:** `2025-03-08T04:59:00Z`
 
 ### Details
-This portion of the CTF event is focused on breaking PBH invariants. There are four invariants that should always hold true when the World Chain Builder is producing blocks. It is important to note that if the builder block is not selected, these conditions are not enforced. 
+This portion of the CTF event is focused on breaking PBH invariants. 
+There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
+It is important to note that if the builder block is not selected, these conditions are not enforced.
 
-Any participant that submits a valid proof of concept and write-up showing that they are able break an invariant will be paid a bounty (up to a specific amount, amounts to be announced). 
+Each invariant has a **maximum total bounty of $10k USDC**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion (or all) of the bounty.
 
-There will be a bounty to break each invariant (amounts to be announced). Participants that submit a valid proof of concept and write-up showing how to break an invariant will be eligible for a portion (or all) of the bounty.
+Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty. 
+If there are `n` valid findings, the max bounty for the invariant will be distributed to the participants who submitted the findings (ex. $10k USDC distributed across `n` teams). 
+For clarity, there is a max
 
-Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty.
+Bounty distribution will follow the rules below:
+- Each submission will be evaluated for validity and severity of impact. The **total bounty for each invariant is capped at $10k**. 
+- If multiple participants submit the **same finding**, only the first valid submission will be evaluated for a bounty.
+- If multiple participants break an invariant in **distinctly different ways**, each submission will be evaluated for a separate bounty.
+- If there are `n` distinct valid findings for an invariant, the **total bounty for that invariant remains capped at $10k**, and each submission will be evaluated for a bounty.
+
 
 Participants can submit findings via this link: (Link to be added)
 
