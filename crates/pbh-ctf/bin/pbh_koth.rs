@@ -11,11 +11,10 @@ use async_stream::stream;
 use config::CTFConfig;
 use eyre::eyre::Result;
 use futures::{Stream, StreamExt};
-use pbh_ctf::derive_identity;
 use pbh_ctf::{
     Identity, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
     bindings::{IPBHEntryPoint::IPBHEntryPointInstance, IPBHKotH::IPBHKotHInstance},
-    ctf_transaction_builder, pbh_ctf_transaction_builder,
+    world_id::WorldID,
 };
 use reqwest::Url;
 
@@ -27,7 +26,7 @@ async fn main() -> Result<()> {
 
     let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("pbh_koth.toml");
     let config = CTFConfig::load(Some(config_path.as_path()))?;
-    let identity = derive_identity(&config.secret)?;
+    let world_id = WorldID::new(&config.secret)?;
 
     let provider = Arc::new(
         ProviderBuilder::new()
@@ -72,7 +71,7 @@ async fn main() -> Result<()> {
 /// Subscribes and streams new blocks from WorldChain Sepolia & Prepare CTF Transactions for submission
 async fn subscribe_and_prepare<P>(
     provider: Arc<P>,
-    identity: Identity,
+    world_id: WorldID,
     private_key: String,
 ) -> Result<Pin<Box<dyn Stream<Item = Result<Option<Bytes>>> + Send>>>
 where
@@ -90,6 +89,7 @@ where
     let signer = private_key.parse::<PrivateKeySigner>()?;
     let block_stream = provider.subscribe_blocks().await?.into_stream();
 
+    let identity = world_id.identity().clone();
     Ok(Box::pin(stream! {
         tokio::pin!(block_stream);
         let wallet_nonce = provider.get_transaction_count(signer.address()).await?;
