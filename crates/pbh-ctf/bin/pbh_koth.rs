@@ -1,21 +1,19 @@
 //! PBH CTF starter bot
 pub mod config;
 
-use std::{path::PathBuf, pin::Pin, sync::Arc};
+use std::{path::PathBuf, sync::Arc};
 
-use alloy_primitives::Bytes;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_signer_local::PrivateKeySigner;
-use async_stream::stream;
 use config::CTFConfig;
 use eyre::eyre::Result;
-use futures::{Stream, StreamExt};
+use futures::StreamExt;
 use pbh_ctf::{
-    CTFTransactionBuilder, Identity, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
+    CTFTransactionBuilder, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
     bindings::{IPBHEntryPoint::IPBHEntryPointInstance, IPBHKotH::IPBHKotHInstance},
     world_id::WorldID,
 };
-use reqwest::{Url, header};
+use reqwest::Url;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -61,14 +59,22 @@ async fn main() -> Result<()> {
 
         // If the user has not hit the pbh limit send a PBH tx, otherwise send a standard tx
         let tx = if pbh_nonce < pbh_nonce_limit {
+            tracing::info!("Preparing PBH CTF transaction");
             let calls = pbh_ctf::king_of_the_hill_multicall(player);
-            CTFTransactionBuilder::new()
+            let tx = CTFTransactionBuilder::new()
                 .to(PBH_CTF_CONTRACT)
                 .with_pbh_multicall(&world_id, pbh_nonce, calls)
                 .await?
                 .build(signer.clone())
-                .await?
+                .await?;
+
+            // Optimistically bump the pbh nonce
+            // @dev If the pbh transaction reverts, the PBH nonce will not be spent and can be used again
+            pbh_nonce += 1;
+
+            tx
         } else {
+            tracing::info!("Preparing CTF transaction");
             let calldata = pbh_ctf::king_of_the_hill_calldata(player);
             CTFTransactionBuilder::new()
                 .to(PBH_CTF_CONTRACT)
@@ -77,7 +83,8 @@ async fn main() -> Result<()> {
                 .await?
         };
 
-        // TODO: send the transaction
+        let pending_tx = provider.send_transaction(tx.into()).await?;
+        tracing::info!("Sent transaction: {:?}", pending_tx);
     }
 
     Ok(())
