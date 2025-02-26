@@ -32,8 +32,8 @@ async fn main() -> eyre::Result<()> {
     // All `TransactionRequest` functions are accsessible through this builder
     let tx = CTFTransactionBuilder::new()
         .to(PBH_CTF_CONTRACT)
-        .input(calldata.into())
-        .build(&signer)
+        .input(calldata.into)
+        .build(signer)
         .await?;
 
     Ok(())
