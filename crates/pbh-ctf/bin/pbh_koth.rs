@@ -3,8 +3,10 @@ pub mod config;
 
 use std::{path::PathBuf, sync::Arc};
 
+use alloy_network::Network;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_signer_local::PrivateKeySigner;
+use alloy_transport::Transport;
 use config::CTFConfig;
 use eyre::eyre::Result;
 use futures::StreamExt;
@@ -32,8 +34,6 @@ async fn main() -> Result<()> {
     // Initialize the WorldID
     let world_id = WorldID::new(&config.semaphore_secret)?;
 
-    // TODO: get the latest pbh nonce number, explain why we have to do this
-
     // Initialize the King of the Hill contract
     let pbh_koth = IPBHKotHInstance::new(PBH_CTF_CONTRACT, provider.clone());
     let game_start = pbh_koth.latestBlock().call().await?._0;
@@ -49,7 +49,8 @@ async fn main() -> Result<()> {
     let mut block_stream = provider.subscribe_blocks().await?.into_stream();
 
     let player = signer.address();
-    // TODO:
+    // TODO: get_pbh_nonce();
+    // TODO: get the latest pbh nonce number, explain why we have to do this
     let mut pbh_nonce = 0;
     while let Some(header) = block_stream.next().await {
         if header.number > game_end.to() {
@@ -88,4 +89,9 @@ async fn main() -> Result<()> {
     }
 
     Ok(())
+}
+
+// TODO: explain why we need to do this
+async fn get_pbh_nonce<P: Provider<N>, N: Network>(world_id: &WorldID, provider: P) -> Result<u64> {
+    todo!()
 }
