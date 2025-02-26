@@ -146,7 +146,6 @@ PBH on World Chain Sepolia will be configured with the following parameters.
 ## Important Links
 - [World Chain Builder](https://github.com/worldcoin/world-chain)
 - [PBH Specs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
-- [Inclusion Proof RPC endpoint](https://signup-orb-ethereum.stage-crypto.worldcoin.dev)
 - [World ID docs](https://docs.world.org/world-id/reference/contracts#usage)
 - [World Chain Sepolia Faucet](https://www.alchemy.com/faucets/world-chain-sepolia)
 
