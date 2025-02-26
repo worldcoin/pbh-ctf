@@ -5,16 +5,19 @@ import {IPBHKotH} from "./interfaces/IPBHKingOfTheHill.sol";
 
 /// @title PBH King of the Hill (PBHKotH)
 /// @notice A competitive game where participants try to be the first to increment a counter within a block.
-/// @dev The game lasts for 3 days, and the player with the highest score at the end wins.
+/// @dev The game lasts for 2 days, and the player with the highest score at the end wins.
 contract PBHKotH is IPBHKotH {
-    /// @notice The Address of the PBHEntryPoint contract.
-    address public immutable entryPoint = 0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6;
-
-    /// @notice Timestamp marking the end of the game.
+    /// @notice Block number marking the end of the game.
     uint256 public immutable gameEnd;
 
     /// @notice Latest block a ctf call was made. Marks the start of the CTF game.
     uint256 public latestBlock;
+
+    /// @notice The starting block of the CTF game.
+    uint256 public immutable gameStart;
+
+    /// @notice 36 hours in blocks.
+    uint256 public constant GAME_DURATION = 64800;
 
     /// @notice Address of the current leader.
     address public leader;
@@ -36,8 +39,9 @@ contract PBHKotH is IPBHKotH {
 
     /// @param _gameStart Timestamp of the start of the CTF game.
     constructor(uint256 _gameStart) {
+        gameStart = _gameStart;
         latestBlock = _gameStart;
-        gameEnd = _gameStart + 129600;
+        gameEnd = _gameStart + GAME_DURATION;
     }
 
     /// @notice Function to attempt to capture the flag
@@ -53,8 +57,7 @@ contract PBHKotH is IPBHKotH {
         // Adjust the user's score
         uint256 score = leaderboard[receiver];
 
-        // PBH transactions are weighted 400:1
-        score = msg.sender == entryPoint ? score + 400 : score + 1;
+        score += 1;
         leaderboard[receiver] = score;
 
         // Adjust high score/leader if score > highScore

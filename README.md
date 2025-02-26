@@ -157,9 +157,9 @@ Participants can submit findings via this link: (Link to be added)
 ## PBH Testnet Configuration
 PBH on World Chain Sepolia will be configured with the following parameters.
 
-- `pbhNonceLimit`: 100
+- `pbhNonceLimit`: 65536
     - The amount of PBH transactions a user can submit per month, per World ID.
-- `pbhGasLimit`: 10,500,000
+- `pbhGasLimit`: 15,000,000
     - The maximum gas that a single PBH tx / UserOp can spend.
 - `verifiedBlockspaceCapacity`: 70%
     - The maximum amount of PBH gas in a block. This is calculated as a percentage of the block limit.
@@ -178,4 +178,4 @@ PBH on World Chain Sepolia will be configured with the following parameters.
 - [WorldID](https://worldchain-sepolia.explorer.alchemy.com/address/0xE177F37AF0A862A02edFEa4F59C02668E9d0aAA4): `0xE177F37AF0A862A02edFEa4F59C02668E9d0aAA4`
 - [PBHEntryPoint](https://worldchain-sepolia.explorer.alchemy.com/address/0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6): `0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6`
 - [PBHSignatureAggregator](https://worldchain-sepolia.explorer.alchemy.com/address/0xED5dc9CDB270818dCec0784bBdc8094082f0eBcB): `0xED5dc9CDB270818dCec0784bBdc8094082f0eBcB`
-- [PBHKingOfTheHill](https://worldscan.org/TODO:): Address To Be Deployed
+- [PBHKingOfTheHill](https://worldchain-sepolia.explorer.alchemy.com/address/0x0432c59e03969Ca5B747023E43B6fa2aEe83AEd5?tab=txs): `0x0432c59e03969Ca5B747023E43B6fa2aEe83AEd5`
