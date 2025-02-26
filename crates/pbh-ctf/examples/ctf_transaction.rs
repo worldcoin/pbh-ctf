@@ -6,14 +6,8 @@ use alloy_signer_local::PrivateKeySigner;
 use alloy_sol_types::SolCall;
 use alloy_sol_types::SolValue;
 use base64::{Engine, engine::general_purpose};
-use pbh_helpers::CTFTransactionBuilder;
-use pbh_helpers::CtfTransactionBuilderBuilder;
-use pbh_helpers::PBH_CTF_CONTRACT;
-use pbh_helpers::king_of_the_hill_calldata;
-use pbh_helpers::{
-    DateMarker, EncodedExternalNullifier, ExternalNullifier, PBH_ENTRY_POINT, PBHProof,
-    hash_to_field,
-};
+use pbh_ctf::CTFTransactionBuilder;
+
 use world_chain_builder_pbh::payload::PBHPayload;
 use world_chain_builder_test_utils::{
     WC_SEPOLIA_CHAIN_ID,
@@ -26,7 +20,7 @@ async fn main() -> eyre::Result<()> {
     let signer = std::env::var("PRIVATE_KEY")?.parse::<PrivateKeySigner>()?;
 
     let player = Address::random();
-    let calldata = king_of_the_hill_calldata(player);
+    let calldata = pbh_ctf::king_of_the_hill_calldata(player);
 
     // The CTF Transaction Builder implements the builder pattern for creating a CTF transaction.
     // All `TransactionRequest` functions are accsessible through this builder

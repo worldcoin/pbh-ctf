@@ -1,5 +1,5 @@
 use alloy_signer_local::PrivateKeySigner;
-use pbh_helpers::CTFTransactionBuilder;
+use pbh_ctf::CTFTransactionBuilder;
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
