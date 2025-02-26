@@ -6,10 +6,8 @@ pub const CONFIG_PREFIX: &str = "CTF_BOT";
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct CTFConfig {
-    /// Ethereum Signer
-    pub private_key: String,
     /// Semaphore secret
-    pub secret: String,
+    pub semaphore_secret: String,
     /// WC Sepolia Provider
     pub provider: String,
 }

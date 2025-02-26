@@ -25,7 +25,6 @@ use world_chain_builder_test_utils::{
 };
 
 use crate::{PBH_CTF_CONTRACT, PBHProof, world_id::WorldID};
-use crate::{PBH_ENTRY_POINT, world_id::InclusionProof};
 
 #[derive(Debug, Clone, Default)]
 pub struct CTFTransactionBuilder {
@@ -50,44 +49,13 @@ impl CTFTransactionBuilder {
         calls: Vec<Call3>,
     ) -> Result<Self> {
         // Get the inclusion proof for the identity in the from the World Tree
-        let proof = world_id.inclusion_proof().await?;
-
-        // Create the external nullifier hash
-        let date = chrono::Utc::now().naive_utc().date();
-        let date_marker = DateMarker::from(date);
-        let external_nullifier = ExternalNullifier::with_date_marker(date_marker, pbh_nonce);
-        let external_nullifier_hash = EncodedExternalNullifier::from(external_nullifier).0;
-
-        let Some(from) = self.tx.from else {
-            todo!("TODO: handle error");
-        };
-
+        let from = Address::ZERO;
         let signal_hash = hash_to_field(&SolValue::abi_encode_packed(&(from, calls.clone())));
-
-        let root = proof.root;
-        let semaphore_proof = semaphore_rs::protocol::generate_proof(
-            world_id.identity(),
-            &proof.proof,
-            external_nullifier_hash,
-            signal_hash,
-        )?;
-
-        let nullifier_hash = semaphore_rs::protocol::generate_nullifier_hash(
-            world_id.identity(),
-            external_nullifier_hash,
-        );
-
-        //TODO: add helper functions to create the PBH payload
-        let payload = PBHPayload {
-            root,
-            nullifier_hash,
-            external_nullifier,
-            proof: PBHProof(semaphore_proof),
-        };
+        let pbh_payload = world_id.pbh_payload(pbh_nonce, signal_hash).await?;
 
         let calldata = IPBHEntryPoint::pbhMulticallCall {
             calls,
-            payload: payload.into(),
+            payload: pbh_payload.into(),
         };
 
         let tx = self

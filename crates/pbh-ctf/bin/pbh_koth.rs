@@ -12,7 +12,7 @@ use config::CTFConfig;
 use eyre::eyre::Result;
 use futures::{Stream, StreamExt};
 use pbh_ctf::{
-    Identity, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
+    CTFTransactionBuilder, Identity, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
     bindings::{IPBHEntryPoint::IPBHEntryPointInstance, IPBHKotH::IPBHKotHInstance},
     world_id::WorldID,
 };
@@ -26,43 +26,35 @@ async fn main() -> Result<()> {
 
     let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("pbh_koth.toml");
     let config = CTFConfig::load(Some(config_path.as_path()))?;
-    let world_id = WorldID::new(&config.secret)?;
-
+    let private_key = std::env::var("PRIVATE_KEY")?;
+    let signer = private_key.parse::<PrivateKeySigner>()?;
     let provider = Arc::new(
         ProviderBuilder::new()
             .on_ws(WsConnect::new(config.provider.parse::<Url>()?))
             .await?,
     );
 
-    let mut tx_stream =
-        subscribe_and_prepare(provider.clone(), identity, config.private_key).await?;
+    // Initialize the WorldID
+    let world_id = WorldID::new(&config.semaphore_secret)?;
 
-    let (tx, rx) = tokio::sync::mpsc::channel(100);
-    let tx_manager = TxManager {
-        receiver: rx,
-        provider,
-    };
+    // TODO: get the latest pbh nonce number
 
-    let tx_manager_handle = tokio::spawn(async move { tx_manager.run().await });
+    // Initialize the King of the Hill contract
+    let pbh_koth = IPBHKotHInstance::new(PBH_CTF_CONTRACT, provider.clone());
+    let game_start = pbh_koth.latestBlock().call().await?._0;
+    let game_end = pbh_koth.gameEnd().call().await?._0;
 
-    let stream_fut = async {
-        while let Some(transaction) = tx_stream.next().await {
-            let transaction = transaction?;
-            if let Some(transaction) = transaction {
-                tx.send(transaction).await?;
-            }
-        }
+    // Initialize the PBHEntrypoint contract and get the PBH nonce limit
+    let pbh_entrypoint = IPBHEntryPointInstance::new(PBH_ENTRY_POINT, provider.clone());
+    let pbh_nonce_limit = pbh_entrypoint.numPbhPerMonth().call().await?._0;
 
-        Ok::<(), eyre::Report>(())
-    };
+    // TODO: Wait for the game to start
 
-    tokio::select! {
-        _ = stream_fut => {
-            error!("Stream ended unexpectedly");
-        },
-        _ = tx_manager_handle => {
-            error!("Tx Manager ended unexpectedly");
-        },
+    // Subscribe to new blocks and prepare CTF transactions
+    let mut block_stream = provider.subscribe_blocks().await?.into_stream();
+
+    while let Some(header) = block_stream.next().await {
+        let tx = CTFTransactionBuilder::new();
     }
 
     Ok(())
@@ -106,78 +98,78 @@ where
     }))
 }
 
-pub struct CtfTransactionBuilder {
-    signer: PrivateKeySigner,
-    wallet_nonce: u64,
-    pbh_nonce: u16,
-    pbh_nonce_limit: u16,
-    identity: Identity,
-}
+// pub struct CtfTransactionBuilder {
+//     signer: PrivateKeySigner,
+//     wallet_nonce: u64,
+//     pbh_nonce: u16,
+//     pbh_nonce_limit: u16,
+//     identity: Identity,
+// }
 
-impl CtfTransactionBuilder {
-    pub fn new(
-        signer: PrivateKeySigner,
-        wallet_nonce: u64,
-        pbh_nonce_limit: u16,
-        identity: Identity,
-    ) -> Result<Self> {
-        Ok(Self {
-            signer,
-            wallet_nonce,
-            pbh_nonce_limit,
-            pbh_nonce: 0,
-            identity,
-        })
-    }
+// impl CtfTransactionBuilder {
+//     pub fn new(
+//         signer: PrivateKeySigner,
+//         wallet_nonce: u64,
+//         pbh_nonce_limit: u16,
+//         identity: Identity,
+//     ) -> Result<Self> {
+//         Ok(Self {
+//             signer,
+//             wallet_nonce,
+//             pbh_nonce_limit,
+//             pbh_nonce: 0,
+//             identity,
+//         })
+//     }
 
-    async fn prepare_ctf_tx(&mut self) -> Result<Option<Bytes>> {
-        info!("Preparing CTF Transaction");
-        let ctf_transaction = if self.pbh_nonce >= self.pbh_nonce_limit {
-            ctf_transaction_builder()
-                .nonce(self.wallet_nonce)
-                .signer(self.signer.clone())
-                .call()
-                .await?
-        } else {
-            let tx = pbh_ctf_transaction_builder()
-                .nonce(self.wallet_nonce)
-                .pbh_nonce(self.pbh_nonce)
-                .signer(self.signer.clone())
-                .identity(self.identity.clone())
-                .call()
-                .await?;
-            self.pbh_nonce += 1;
-            tx
-        };
+//     async fn prepare_ctf_tx(&mut self) -> Result<Option<Bytes>> {
+//         info!("Preparing CTF Transaction");
+//         let ctf_transaction = if self.pbh_nonce >= self.pbh_nonce_limit {
+//             ctf_transaction_builder()
+//                 .nonce(self.wallet_nonce)
+//                 .signer(self.signer.clone())
+//                 .call()
+//                 .await?
+//         } else {
+//             let tx = pbh_ctf_transaction_builder()
+//                 .nonce(self.wallet_nonce)
+//                 .pbh_nonce(self.pbh_nonce)
+//                 .signer(self.signer.clone())
+//                 .identity(self.identity.clone())
+//                 .call()
+//                 .await?;
+//             self.pbh_nonce += 1;
+//             tx
+//         };
 
-        self.wallet_nonce += 1;
-        Ok(Some(ctf_transaction.encoded_2718().into()))
-    }
-}
+//         self.wallet_nonce += 1;
+//         Ok(Some(ctf_transaction.encoded_2718().into()))
+//     }
+// }
 
-pub struct TxManager<P> {
-    receiver: tokio::sync::mpsc::Receiver<Bytes>,
-    provider: P,
-}
+// pub struct TxManager<P> {
+//     receiver: tokio::sync::mpsc::Receiver<Bytes>,
+//     provider: P,
+// }
 
-impl<P> TxManager<P>
-where
-    P: Provider,
-{
-    pub async fn run(mut self) -> Result<()> {
-        while let Some(tx) = self.receiver.recv().await {
-            let builder = self.provider.send_raw_transaction(&tx).await.map_err(|e| {
-                error!(error = ?e, "Error sending transaction");
-                e
-            })?;
+// impl<P> TxManager<P>
+// where
+//     P: Provider,
+// {
+//     pub async fn run(mut self) -> Result<()> {
+//         while let Some(tx) = self.receiver.recv().await {
+//             let builder = self.provider.send_raw_transaction(&tx).await.map_err(|e| {
+//                 error!(error = ?e, "Error sending transaction");
+//                 e
+//             })?;
 
-            let receipt = builder.get_receipt().await.map_err(|e| {
-                error!(error = ?e, "Error getting receipt");
-                e
-            })?;
-            info!(hash = %receipt.transaction_hash, "Receipt received for Transaction");
-        }
+//             let receipt = builder.get_receipt().await.map_err(|e| {
+//                 error!(error = ?e, "Error getting receipt");
+//                 e
+//             })?;
+//             info!(hash = %receipt.transaction_hash, "Receipt received for Transaction");
+//         }
 
-        Ok(())
-    }
-}
+//         Ok(())
+//     }
+// }
