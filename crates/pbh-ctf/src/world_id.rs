@@ -1,8 +1,5 @@
-use alloy_primitives::Address;
-use alloy_provider::bindings::IMulticall3::Call3;
-use alloy_sol_types::SolValue;
 use base64::{Engine, prelude::BASE64_STANDARD};
-use semaphore_rs::{Field, hash_to_field, identity::Identity, protocol::Proof};
+use semaphore_rs::{Field, identity::Identity, protocol::Proof};
 use serde::{Deserialize, Serialize};
 use world_chain_builder_pbh::{
     date_marker::DateMarker,

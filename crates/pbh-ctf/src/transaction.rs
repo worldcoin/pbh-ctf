@@ -1,21 +1,13 @@
-use std::ops::{Deref, DerefMut};
-
-use alloy_consensus::{TxEnvelope, TypedTransaction};
+use alloy_consensus::TxEnvelope;
 use alloy_network::{EthereumWallet, TransactionBuilder};
-use alloy_primitives::{Address, Bytes, TxKind, U256};
+use alloy_primitives::{Address, Bytes, U256};
 use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
 use alloy_sol_types::{SolCall, SolValue};
-use base64::prelude::*;
-use bon::builder;
+
 use eyre::Result;
-use semaphore_rs::{Field, hash_to_field, identity::Identity};
-use serde::{Deserialize, Serialize};
-use world_chain_builder_pbh::{
-    date_marker::DateMarker,
-    external_nullifier::{EncodedExternalNullifier, ExternalNullifier},
-    payload::PBHPayload,
-};
+use semaphore_rs::hash_to_field;
+
 use world_chain_builder_test_utils::{
     WC_SEPOLIA_CHAIN_ID,
     bindings::{
@@ -24,7 +16,7 @@ use world_chain_builder_test_utils::{
     },
 };
 
-use crate::{PBH_CTF_CONTRACT, PBHProof, world_id::WorldID};
+use crate::world_id::WorldID;
 
 #[derive(Debug, Clone, Default)]
 pub struct CTFTransactionBuilder {
@@ -46,10 +38,10 @@ impl CTFTransactionBuilder {
         self,
         world_id: &WorldID,
         pbh_nonce: u16,
+        from: Address,
         calls: Vec<Call3>,
     ) -> Result<Self> {
         // Get the inclusion proof for the identity in the from the World Tree
-        let from = Address::ZERO;
         let signal_hash = hash_to_field(&SolValue::abi_encode_packed(&(from, calls.clone())));
         let pbh_payload = world_id.pbh_payload(pbh_nonce, signal_hash).await?;
 
@@ -115,6 +107,12 @@ impl CTFTransactionBuilder {
         let tx = self.tx.input(input);
         Self { tx }
     }
+
+    /// Sets the From address for the transaction.
+    pub fn from(self, from: Address) -> Self {
+        let tx = self.tx.from(from);
+        Self { tx }
+    }
 }
 
 /// Generates calldata for the PBH King of the Hill game, where the provided player
@@ -127,9 +125,9 @@ pub fn king_of_the_hill_calldata(player: Address) -> Bytes {
 
 /// Generates a multicall call, targeting the PBH King of the hill contract.
 /// The provided player will earn a point if they successfully capture the flag.
-pub fn king_of_the_hill_multicall(player: Address) -> Vec<Call3> {
+pub fn king_of_the_hill_multicall(player: Address, target: Address) -> Vec<Call3> {
     let call = IMulticall3::Call3 {
-        target: PBH_CTF_CONTRACT,
+        target,
         callData: crate::bindings::IPBHKotH::ctfCall { receiver: player }
             .abi_encode()
             .into(),

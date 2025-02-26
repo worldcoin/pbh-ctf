@@ -1,19 +1,8 @@
-use alloy_network::{EthereumWallet, TransactionBuilder};
 use alloy_primitives::Address;
-use alloy_primitives::TxKind;
-use alloy_rpc_types_eth::{TransactionInput, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
-use alloy_sol_types::SolCall;
-use alloy_sol_types::SolValue;
-use base64::{Engine, engine::general_purpose};
 use pbh_ctf::CTFTransactionBuilder;
 
 use pbh_ctf::PBH_CTF_CONTRACT;
-use world_chain_builder_pbh::payload::PBHPayload;
-use world_chain_builder_test_utils::{
-    WC_SEPOLIA_CHAIN_ID,
-    bindings::{IMulticall3, IPBHEntryPoint},
-};
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
