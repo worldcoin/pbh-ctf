@@ -1,20 +1,21 @@
 use std::path::Path;
 
+use alloy_primitives::Address;
 use serde::Deserialize;
 
-pub const CONFIG_PREFIX: &str = "CTF_BOT";
+pub const CONFIG_PREFIX: &str = "PBH_CTF";
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct CtfConfig {
-    /// Ethereum Signer
-    pub private_key: String,
+pub struct CTFConfig {
     /// Semaphore secret
-    pub secret: String,
+    pub semaphore_secret: String,
     /// WC Sepolia Provider
-    pub provider: String,
+    pub provider_uri: String,
+    /// Address of the player to keep score on the leaderboard
+    pub player_address: Address,
 }
 
-impl CtfConfig {
+impl CTFConfig {
     pub fn load(config_path: Option<&Path>) -> eyre::Result<Self> {
         let mut settings = config::Config::builder();
 

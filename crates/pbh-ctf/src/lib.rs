@@ -1,10 +1,10 @@
 //! This crate provides helpers for Generating provable transactions on World Chain.
-#![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 use alloy_primitives::{Address, address};
 
 pub mod bindings;
-pub mod helpers;
+pub mod transaction;
+pub mod world_id;
 
 /// The chain ID for WC Sepolia
 pub const CHAIN_ID: u64 = 4801;
@@ -12,7 +12,8 @@ pub const CHAIN_ID: u64 = 4801;
 /// The PBH CTF contract address.
 pub const PBH_CTF_CONTRACT: Address = address!("0432c59e03969Ca5B747023E43B6fa2aEe83AEd5");
 
-pub const PBH_CTF_CONTRACT_TEST: Address = address!("642001e97B715f5Ab0ad94B6647805Df1b240B1B");
+/// The PBH CTF test contract address.
+pub const PBH_CTF_CONTRACT_TEST: Address = address!("0x642001e97B715f5Ab0ad94B6647805Df1b240B1B");
 
 /// The entrypoint contract for all PBH transactions.
 pub const PBH_ENTRY_POINT: Address = address!("6e37bAB9d23bd8Bdb42b773C58ae43C6De43A590");
@@ -24,7 +25,7 @@ pub const PBH_SIGNATURE_AGGREGATOR: Address = address!("ED5dc9CDB270818dCec0784b
 pub const INCLUSION_PROOF_URL: &str = "https://signup-orb-ethereum.stage-crypto.worldcoin.dev";
 
 // Re-exports
-pub use helpers::*;
+pub use transaction::*;
 
 pub use world_chain_builder_pbh::{
     date_marker::DateMarker,
