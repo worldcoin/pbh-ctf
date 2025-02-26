@@ -2,8 +2,8 @@ use std::ops::{Deref, DerefMut};
 
 use alloy_consensus::{TxEnvelope, TypedTransaction};
 use alloy_network::{EthereumWallet, TransactionBuilder};
-use alloy_primitives::{Address, Bytes, TxKind};
-use alloy_rpc_types_eth::{TransactionInput, TransactionRequest};
+use alloy_primitives::{Address, Bytes, TxKind, U256};
+use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
 use alloy_sol_types::{SolCall, SolValue};
 use base64::prelude::*;
@@ -34,20 +34,8 @@ pub struct InclusionProof {
 }
 
 #[derive(Debug, Clone, Default)]
-pub struct CTFTransactionBuilder(pub TransactionRequest);
-
-impl Deref for CTFTransactionBuilder {
-    type Target = TransactionRequest;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl DerefMut for CTFTransactionBuilder {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
+pub struct CTFTransactionBuilder {
+    pub tx: TransactionRequest,
 }
 
 impl CTFTransactionBuilder {
@@ -58,7 +46,7 @@ impl CTFTransactionBuilder {
             .max_priority_fee_per_gas(1e8 as u128)
             .with_chain_id(WC_SEPOLIA_CHAIN_ID);
 
-        CTFTransactionBuilder(tx)
+        CTFTransactionBuilder { tx }
     }
 
     pub async fn with_pbh_multicall(
@@ -76,7 +64,7 @@ impl CTFTransactionBuilder {
         let external_nullifier = ExternalNullifier::with_date_marker(date_marker, pbh_nonce);
         let external_nullifier_hash = EncodedExternalNullifier::from(external_nullifier).0;
 
-        let Some(from) = self.0.from else {
+        let Some(from) = self.tx.from else {
             todo!("TODO: handle error");
         };
 
@@ -106,13 +94,62 @@ impl CTFTransactionBuilder {
             payload: payload.into(),
         };
 
-        Ok(Self(self.0.input(TransactionInput::new(
-            calldata.abi_encode().into(),
-        ))))
+        let tx = self
+            .tx
+            .input(TransactionInput::new(calldata.abi_encode().into()));
+        Ok(Self { tx })
     }
 
     pub async fn build(self, signer: PrivateKeySigner) -> Result<TxEnvelope> {
-        Ok(self.0.build::<EthereumWallet>(&signer.into()).await?)
+        Ok(self.tx.build::<EthereumWallet>(&signer.into()).await?)
+    }
+
+    /// Sets the gas limit for the transaction.
+    pub fn gas_limit(self, gas_limit: u64) -> Self {
+        let tx = self.tx.gas_limit(gas_limit);
+        Self { tx }
+    }
+
+    /// Sets the nonce for the transaction.
+    pub fn nonce(self, nonce: u64) -> Self {
+        let tx = self.tx.nonce(nonce);
+        Self { tx }
+    }
+
+    /// Sets the maximum fee per gas for the transaction.
+    pub fn max_fee_per_gas(self, max_fee_per_gas: u128) -> Self {
+        let tx = self.tx.max_fee_per_gas(max_fee_per_gas);
+        Self { tx }
+    }
+
+    /// Sets the maximum priority fee per gas for the transaction.
+    pub fn max_priority_fee_per_gas(self, max_priority_fee_per_gas: u128) -> Self {
+        let tx = self.tx.max_priority_fee_per_gas(max_priority_fee_per_gas);
+        Self { tx }
+    }
+
+    /// Sets the recipient address for the transaction.
+    pub fn to(self, to: Address) -> Self {
+        let tx = self.tx.to(to);
+        Self { tx }
+    }
+
+    /// Sets the value (amount) for the transaction.
+    pub fn value(self, value: U256) -> Self {
+        let tx = self.tx.value(value);
+        Self { tx }
+    }
+
+    /// Sets the access list for the transaction.
+    pub fn access_list(self, access_list: AccessList) -> Self {
+        let tx = self.tx.access_list(access_list);
+        Self { tx }
+    }
+
+    /// Sets the input data for the transaction.
+    pub fn input(self, input: TransactionInput) -> Self {
+        let tx = self.tx.input(input);
+        Self { tx }
     }
 }
 
