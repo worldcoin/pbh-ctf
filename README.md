@@ -36,6 +36,7 @@
 # Table of Contents
 
 - [Overview](#overview)
+- [Docs](#docs)
 - [Getting a Testnet World ID](#getting-a-testnet-world-id)
 - [Warmup Game: PBH King of the Hill](#warmup-game-pbh-king-of-the-hill)
   - [Details](#details)
@@ -55,6 +56,8 @@ Priority Blockspace for Humans is a new transaction ordering policy on World Cha
 
 This CTF event will feature a warm-up game followed by a "Break PBH" track where participants will try to break specific invariants related to PBH. A bounty of (amount to be announced) will be paid out to the winner of the warm-up game. Additionally, bounties (amounts to be announced) will be paid to participants that successfully break invariants specified below. 
 
+
+## Docs
 To get familiar with PBH and the World Chain Builder, check out these links:
 - [PBH Docs](https://worldcoin.github.io/world-chain/pbh/architecture.html)
 - [World Chain Builder](https://github.com/worldcoin/world-chain/tree/main/world-chain-builder/crates/world)
