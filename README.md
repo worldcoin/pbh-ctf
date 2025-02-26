@@ -91,7 +91,7 @@ The warm-up game is a simple "King of the Hill" game where participants race to 
 
 Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty (Amount to be announced) on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
 
-The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block 10152556), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.
+The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](t.me/pbhctf). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block `10152556`), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.
 
 ```solidity
 contract PBHKotH {
@@ -132,7 +132,7 @@ contract PBHKotH {
 - **End Time:** `2025-03-08T04:59:00Z`
 
 ### Details
-This portion of the CTF event is focused on breaking PBH invariants. There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
+This portion of the CTF event is focused on breaking PBH invariants. There are four invariants that should always hold true when the World Chain Builder is producing blocks. It is important to note that if the builder block is not selected, these conditions are not enforced. 
 
 Any participant that submits a valid proof of concept and write-up showing that they are able break an invariant will be paid a bounty (up to a specific amount, amounts to be announced). 
 
@@ -143,6 +143,8 @@ Each submission will be evaluated for validity and severity of impact. If two pa
 Participants can submit findings via this link: (Link to be added)
 
 ### Invariants
+
+For any block built by the World Chain Builder, the following invariants must hold. It is important to note that if the builder block is not selected, these conditions are not enforced. 
 
 - **PBH Transaction Limits**: Users cannot exceed `numPbhPerMonth` PBH transactions per month, for a given World ID.
 
