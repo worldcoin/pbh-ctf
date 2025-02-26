@@ -10,7 +10,8 @@ use async_stream::stream;
 use config::CtfConfig;
 use eyre::eyre::Result;
 use futures::{Stream, StreamExt};
-use pbh_helpers::{
+use pbh_ctf::derive_identity;
+use pbh_ctf::{
     Identity, PBH_CTF_CONTRACT, PBH_ENTRY_POINT,
     bindings::{IPBHEntryPoint::IPBHEntryPointInstance, IPBHKotH::IPBHKotHInstance},
     ctf_transaction_builder, pbh_ctf_transaction_builder,
@@ -27,7 +28,7 @@ async fn main() -> Result<()> {
 
     let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("ctf_bot.toml");
     let config = CtfConfig::load(Some(config_path.as_path()))?;
-    let identity = pbh_helpers::derive_identity(&config.secret)?;
+    let identity = derive_identity(&config.secret)?;
 
     let provider = Arc::new(
         ProviderBuilder::new()
