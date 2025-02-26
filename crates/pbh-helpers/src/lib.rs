@@ -10,8 +10,9 @@ pub mod helpers;
 pub const CHAIN_ID: u64 = 4801;
 
 /// The PBH CTF contract address.
-/// TODO: Update with deployed address
-pub const PBH_CTF_CONTRACT: Address = address!("0E39accF2f9552a51a85A0A3412721AA597D1673");
+pub const PBH_CTF_CONTRACT: Address = address!("0432c59e03969Ca5B747023E43B6fa2aEe83AEd5");
+
+pub const PBH_CTF_CONTRACT_TEST: Address = address!("642001e97B715f5Ab0ad94B6647805Df1b240B1B");
 
 /// The entrypoint contract for all PBH transactions.
 pub const PBH_ENTRY_POINT: Address = address!("6e37bAB9d23bd8Bdb42b773C58ae43C6De43A590");

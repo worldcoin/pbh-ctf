@@ -35,7 +35,7 @@ pub async fn pbh_ctf_transaction_builder(
     identity: Identity,
     #[builder(default = 0)] pbh_nonce: u16,
     #[builder(default = 0)] nonce: u64,
-    #[builder(default = 130000)] gas_limit: u64,
+    #[builder(default = 200000)] gas_limit: u64,
     #[builder(default = 1e8 as u128)] max_fee_per_gas: u128,
     #[builder(default = 1e8 as u128)] max_priority_fee_per_gas: u128,
     #[builder(default = WC_SEPOLIA_CHAIN_ID)] chain_id: u64,
@@ -113,7 +113,7 @@ pub async fn pbh_ctf_transaction_builder(
 pub async fn ctf_transaction_builder(
     signer: PrivateKeySigner,
     #[builder(default = 0)] nonce: u64,
-    #[builder(default = 50000)] gas_limit: u64,
+    #[builder(default = 100000)] gas_limit: u64,
     #[builder(default = 1e8 as u128)] max_fee_per_gas: u128,
     #[builder(default = 1e8 as u128)] max_priority_fee_per_gas: u128,
     #[builder(default = WC_SEPOLIA_CHAIN_ID)] chain_id: u64,
