@@ -142,10 +142,6 @@ It is important to note that if the builder block is not selected, these conditi
 
 Each invariant has a **maximum total bounty of $10k USDC**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
 
-Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty. 
-If there are `n` valid findings, the max bounty for the invariant will be distributed to the participants who submitted the findings (ex. $10k USDC distributed across `n` teams). 
-For clarity, there is a max
-
 Bounty distribution will follow the rules below:
 - Each submission will be evaluated for validity and severity of impact. The **total bounty for each invariant is capped at $10k**. 
 - If multiple participants submit the **same finding**, only the first valid submission will be evaluated for a bounty.
