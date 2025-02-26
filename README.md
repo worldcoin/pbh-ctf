@@ -140,7 +140,7 @@ This portion of the CTF event is focused on breaking PBH invariants.
 There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
 It is important to note that if the builder block is not selected, these conditions are not enforced.
 
-Each invariant has a **maximum total bounty of $10k USDC**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
+The **total bounty for each invariant is capped at $10k**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
 
 Bounty distribution will follow the rules below:
 - Each submission will be evaluated for validity and severity of impact. The **total bounty for each invariant is capped at $10k**. 
