@@ -33,6 +33,21 @@
 
 <br>
 
+# Table of Contents
+
+- [Overview](#overview)
+- [Getting a Testnet World ID](#getting-a-testnet-world-id)
+- [Warmup Game: PBH King of the Hill](#warmup-game-pbh-king-of-the-hill)
+  - [Details](#details)
+- [Break PBH Track](#break-pbh-track)
+  - [Details](#details-1)
+  - [Invariants](#invariants)
+- [PBH Testnet Configuration](#pbh-testnet-configuration)
+- [Important Links](#important-links)
+- [Testnet Contract Addresses](#testnet-contract-addresses)
+
+<br>
+
 ## Overview 
 With the launch of Priority Blockspace for Humans (PBH) on World Chain Sepolia, a PBH CTF event will take place from `2025-02-28T05:00:00Z` to `2025-03-08T04:59:00Z` to discover edge cases and observe interesting/unexpected outcomes.
 
@@ -67,7 +82,6 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 
 <br>
 
-
 ## Warmup Game: PBH King of the Hill
 - **Start Time:** `2025-02-28T05:00:00Z`
 - **End Time:** `2025-03-02T04:59:00Z`
@@ -77,26 +91,36 @@ The warm-up game is a simple "King of the Hill" game where participants race to 
 
 Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty (Amount to be announced) on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
 
+The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](). The King of the Hill contract will unlock at `x`, allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.
+
 ```solidity
 contract PBHKotH {
     // --snip--
+
     /// @notice Function to attempt to capture the flag
-    function ctf(address addr) public {
-        require(block.timestamp < gameEnd, GameOver());
+    /// @dev This can only be called once per block
+    function ctf(address receiver) public {
+        // Ensure game is still active
+        require(block.number < gameEnd, GameOver());
 
         // Ensure ctf hasnt been called yet this block
-        require(block.timestamp > lastBlock, TooLate());
-        lastBlock = uint128(block.timestamp);
+        require(block.number > latestBlock, TooLate());
+        latestBlock = uint128(block.number);
 
         // Adjust the user's score
-        uint256 score = leaderboard[addr];
-        score += 1;
-        leaderboard[addr] = score;
+        uint256 score = leaderboard[receiver];
 
+        // PBH transactions are weighted 400:1
+        score = msg.sender == entryPoint ? score + 400 : score + 1;
+        leaderboard[receiver] = score;
+
+        // Adjust high score/leader if score > highScore
         if (score > highScore) {
-            leader = addr;
+            leader = receiver;
             highScore = score;
         }
+
+        emit Ctf(receiver, score);
     }
 }
 ```
@@ -127,7 +151,6 @@ Participants can submit findings via this link: (Link to be added)
 - **PBH Block Limit**: The total PBH gas in a block must not exceed `pbhBlockCapacity`.
 
 - **PBH Ordering Rules**: All PBH transactions must be ordered before non-PBH transactions in a block.
-
 
 <br>
 
