@@ -92,9 +92,10 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 ### Details
 The warm-up game is a simple "King of the Hill" game where participants race to call the `ctf()` function and increment a counter. Users will specify an address to be used as the key in the `leaderboard` mapping.
 
-Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty (Amount to be announced) on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
+Each block, the first player to call the function will score a point. At the end of the time period, the player with the highest score will be sent the bounty on World Chain Mainnet. PBH will allow users to be included in the block with priority over non-PBH transactions. Note that if there are multiple PBH transactions in the block, this subset of transactions is sorted by priority fee.
 
-The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](t.me/pbhctf). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block `10152556`), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.  A bounty of $3k USDC will be paid out to the winner of the warm-up game. 
+The event will start at `2025-02-28T05:00:00Z` where builders can start building their bot and ask any questions in the [PBH CTF telegram group](t.me/pbhctf). The King of the Hill contract will unlock at `2025-02-29T18:30:00Z` (block `10152556`), allowing participants to start submitting transactions and accumulating their score. The game will end at `2025-03-02T04:59:00Z` and the player with the highest score will win.  
+A bounty of $3k USDC will be paid out to the winner of the warm-up game. 
 
 ```solidity
 contract PBHKotH {
