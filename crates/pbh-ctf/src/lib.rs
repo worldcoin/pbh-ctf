@@ -4,7 +4,7 @@
 use alloy_primitives::{Address, address};
 
 pub mod bindings;
-pub mod helpers;
+pub mod transaction;
 
 /// The chain ID for WC Sepolia
 pub const CHAIN_ID: u64 = 4801;
@@ -23,7 +23,7 @@ pub const PBH_SIGNATURE_AGGREGATOR: Address = address!("ED5dc9CDB270818dCec0784b
 pub const INCLUSION_PROOF_URL: &str = "https://signup-orb-ethereum.stage-crypto.worldcoin.dev";
 
 // Re-exports
-pub use helpers::*;
+pub use transaction::*;
 
 pub use world_chain_builder_pbh::{
     date_marker::DateMarker,

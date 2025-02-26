@@ -26,7 +26,7 @@ mod config;
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
-    let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("ctf_bot.toml");
+    let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("pbh_koth.toml");
     let config = CtfConfig::load(Some(config_path.as_path()))?;
     let identity = derive_identity(&config.secret)?;
 

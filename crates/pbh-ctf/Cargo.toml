@@ -39,3 +39,8 @@ chrono.workspace = true
 
 [dev-dependencies]
 tokio.workspace = true
+
+
+[[bin]]
+name = "pbh_koth"
+path = "bin/pbh_koth.rs"
