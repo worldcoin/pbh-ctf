@@ -125,7 +125,7 @@ impl CtfTransactionBuilder {
             signer,
             wallet_nonce,
             pbh_nonce_limit,
-            pbh_nonce: 1,
+            pbh_nonce: 0,
             identity,
         })
     }

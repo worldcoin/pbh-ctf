@@ -12,13 +12,13 @@ contract PBHKotHTest is Test {
     }
 
     function test_Ctf_RevertIf_GameOver() public {
-        vm.warp(block.timestamp + 3 days);
+        vm.roll(block.number + 129600);
         vm.expectRevert(PBHKotH.GameOver.selector);
         pbhKingOfTheHill.ctf(address(this));
     }
 
     function testCtf_RevertIf_TooLate() public {
-        vm.warp(block.timestamp + 1);
+        vm.roll(block.number + 1);
         pbhKingOfTheHill.ctf(address(this));
         vm.prank(address(0xc0ffee));
         vm.expectRevert(PBHKotH.TooLate.selector);
@@ -26,15 +26,15 @@ contract PBHKotHTest is Test {
     }
 
     function testCtf() public {
-        vm.warp(block.timestamp + 1);
+        vm.roll(block.number + 1);
         pbhKingOfTheHill.ctf(address(this));
         assertEq(pbhKingOfTheHill.leader(), address(this));
         assertEq(pbhKingOfTheHill.highScore(), 1);
         assertEq(pbhKingOfTheHill.leaderboard(address(this)), 1);
         vm.startPrank(address(0xc0ffee));
-        vm.warp(block.timestamp + 2);
+        vm.roll(block.number + 2);
         pbhKingOfTheHill.ctf(address(0xc0ffee));
-        vm.warp(block.timestamp + 3);
+        vm.roll(block.number + 3);
         pbhKingOfTheHill.ctf(address(0xc0ffee));
         assertEq(pbhKingOfTheHill.leader(), address(0xc0ffee));
         assertEq(pbhKingOfTheHill.highScore(), 2);
