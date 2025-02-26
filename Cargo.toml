@@ -1,6 +1,44 @@
-[package]
-name = "pbh-ctf"
+[workspace.package]
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
 
-[dependencies]
+[workspace]
+resolver = "2"
+members = ["crates/pbh-ctf", "crates/pbh-helpers"]
+
+[workspace.dependencies]
+
+# worldcoin
+world-chain-builder-pbh = { git = "https://github.com/worldcoin/world-chain", rev = "7a359d2" }
+world-chain-builder-pool = { git = "https://github.com/worldcoin/world-chain", rev = "7a359d2" }
+world-chain-builder-test-utils = { git = "https://github.com/worldcoin/world-chain", rev = "7a359d2" }
+pbh-helpers = { path = "crates/pbh-helpers" }
+
+semaphore-rs = "0.3.1"
+
+alloy-primitives = { version = "0.8.20", default-features = false }
+alloy-sol-types = { version = "0.8.18", default-features = false }
+alloy-rpc-types-eth = { version = "0.11.1", default-features = false }
+alloy-signer-local = { version = "0.11.1", default-features = false }
+alloy-network = { version = "0.11.1", default-features = false }
+alloy-consensus = { version = "0.11.1", default-features = false }
+alloy-provider = { version = "0.11.1", default-features = false }
+alloy-transport = { version = "0.11.1", default-features = false }
+alloy-eips = { version = "0.11.1", default-features = false }
+alloy-contract = { version = "0.11.1", default-features = false }
+
+tokio = { version = "1", features = ["full"] }
+async-stream = "0.3.6"
+futures = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = "0.4"
+base64 = "0.22.1"
+eyre = { version = "0.6", package = "color-eyre" }
+reqwest = { version = "0.12", default-features = false }
+bon = "3.3.0"
+config = "0.14.0"
+tracing = "0.1.4"
+tracing-subscriber = { version = "0.3.11", features = ["env-filter"] }
