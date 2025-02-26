@@ -5,6 +5,7 @@ use alloy_primitives::{Address, address};
 
 pub mod bindings;
 pub mod transaction;
+pub mod world_id;
 
 /// The chain ID for WC Sepolia
 pub const CHAIN_ID: u64 = 4801;

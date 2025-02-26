@@ -8,6 +8,7 @@ use alloy_sol_types::SolValue;
 use base64::{Engine, engine::general_purpose};
 use pbh_ctf::CTFTransactionBuilder;
 
+use pbh_ctf::PBH_CTF_CONTRACT;
 use world_chain_builder_pbh::payload::PBHPayload;
 use world_chain_builder_test_utils::{
     WC_SEPOLIA_CHAIN_ID,
@@ -22,13 +23,11 @@ async fn main() -> eyre::Result<()> {
     let player = Address::random();
     let calldata = pbh_ctf::king_of_the_hill_calldata(player);
 
-    // The CTF Transaction Builder implements the builder pattern for creating a CTF transaction.
-    // All `TransactionRequest` functions are accsessible through this builder
-    // let tx = CTFTransactionBuilder::new()
-    //     .to(PBH_CTF_CONTRACT)
-    //     .input(calldata.into)
-    //     .build(signer)
-    //     .await?;
+    let _tx = CTFTransactionBuilder::new()
+        .to(PBH_CTF_CONTRACT)
+        .input(calldata.into())
+        .build(signer)
+        .await?;
 
     Ok(())
 }
