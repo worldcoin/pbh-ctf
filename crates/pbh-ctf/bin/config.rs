@@ -5,7 +5,7 @@ use serde::Deserialize;
 pub const CONFIG_PREFIX: &str = "CTF_BOT";
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct CtfConfig {
+pub struct CTFConfig {
     /// Ethereum Signer
     pub private_key: String,
     /// Semaphore secret
@@ -14,7 +14,7 @@ pub struct CtfConfig {
     pub provider: String,
 }
 
-impl CtfConfig {
+impl CTFConfig {
     pub fn load(config_path: Option<&Path>) -> eyre::Result<Self> {
         let mut settings = config::Config::builder();
 

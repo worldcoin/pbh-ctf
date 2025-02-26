@@ -1,4 +1,5 @@
 //! PBH CTF starter bot
+pub mod config;
 
 use std::{path::PathBuf, pin::Pin, sync::Arc};
 
@@ -7,7 +8,7 @@ use alloy_primitives::Bytes;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_signer_local::PrivateKeySigner;
 use async_stream::stream;
-use config::CtfConfig;
+use config::CTFConfig;
 use eyre::eyre::Result;
 use futures::{Stream, StreamExt};
 use pbh_ctf::derive_identity;
@@ -20,14 +21,12 @@ use reqwest::Url;
 
 use tracing::{error, info};
 
-mod config;
-
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
     let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("pbh_koth.toml");
-    let config = CtfConfig::load(Some(config_path.as_path()))?;
+    let config = CTFConfig::load(Some(config_path.as_path()))?;
     let identity = derive_identity(&config.secret)?;
 
     let provider = Arc::new(
