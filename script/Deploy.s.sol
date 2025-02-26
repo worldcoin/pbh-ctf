@@ -6,12 +6,12 @@ import {PBHKotH} from "src/PBHKingOfTheHill.sol";
 
 contract Deploy is Script {
     PBHKotH public pbhKingOfTheHill;
-    uint128 public constant GAME_START = 1740700800; // 02/28/25 00:00:00
+    uint256 public constant GAME_START = 10152556;
 
     function run() public {
         uint256 deployer = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployer);
-        pbhKingOfTheHill = new PBHKotH(block.number);
+        pbhKingOfTheHill = new PBHKotH(GAME_START);
         vm.stopBroadcast();
     }
 }
