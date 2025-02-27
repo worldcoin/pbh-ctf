@@ -87,7 +87,7 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 
 ## Warmup Game: PBH King of the Hill
 - **Kick off:** `2025-02-28T05:00:00Z`
-- **Game Start Time:** ``2025-02-29T18:30:00Z` (block `10152556`)
+- **Game Start Time:** `2025-02-29T18:30:00Z` (block `10152556`)
 - **Game End Time:** `2025-03-02T04:59:00Z`
 
 ### Details
