@@ -187,6 +187,6 @@ PBH on World Chain Sepolia will be configured with the following parameters.
 
 ## Testnet Contract Addresses
 - [WorldID](https://worldchain-sepolia.explorer.alchemy.com/address/0xE177F37AF0A862A02edFEa4F59C02668E9d0aAA4): `0xE177F37AF0A862A02edFEa4F59C02668E9d0aAA4`
-- [PBHEntryPoint](https://worldchain-sepolia.explorer.alchemy.com/address/0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6): `0xCDfDF72065493bDDb2131478c89C1D5482BD1dF6`
-- [PBHSignatureAggregator](https://worldchain-sepolia.explorer.alchemy.com/address/0xED5dc9CDB270818dCec0784bBdc8094082f0eBcB): `0xED5dc9CDB270818dCec0784bBdc8094082f0eBcB`
+- [PBHEntryPoint](https://worldchain-sepolia.explorer.alchemy.com/address/0x6e37bAB9d23bd8Bdb42b773C58ae43C6De43A590): `0x6e37bAB9d23bd8Bdb42b773C58ae43C6De43A590`
+- [PBHSignatureAggregator](https://worldchain-sepolia.explorer.alchemy.com/address/0xf07d3efadD82A1F0b4C5Cc3476806d9a170147Ba): `0xf07d3efadD82A1F0b4C5Cc3476806d9a170147Ba`
 - [PBHKingOfTheHill](https://worldchain-sepolia.explorer.alchemy.com/address/0x0432c59e03969Ca5B747023E43B6fa2aEe83AEd5?tab=txs): `0x0432c59e03969Ca5B747023E43B6fa2aEe83AEd5`

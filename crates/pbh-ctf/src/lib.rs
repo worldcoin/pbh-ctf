@@ -19,7 +19,7 @@ pub const PBH_CTF_CONTRACT_TEST: Address = address!("0x642001e97B715f5Ab0ad94B66
 pub const PBH_ENTRY_POINT: Address = address!("6e37bAB9d23bd8Bdb42b773C58ae43C6De43A590");
 
 /// The Signature Aggregator for 4337 priority bundles.
-pub const PBH_SIGNATURE_AGGREGATOR: Address = address!("ED5dc9CDB270818dCec0784bBdc8094082f0eBcB");
+pub const PBH_SIGNATURE_AGGREGATOR: Address = address!("f07d3efadD82A1F0b4C5Cc3476806d9a170147Ba");
 
 /// The URL for the inclusion proof endpoint.
 pub const INCLUSION_PROOF_URL: &str = "https://signup-orb-ethereum.stage-crypto.worldcoin.dev";
