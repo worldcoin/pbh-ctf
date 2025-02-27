@@ -86,8 +86,9 @@ https://ctf-onboarding.stage-crypto.worldcoin.dev/front
 <br>
 
 ## Warmup Game: PBH King of the Hill
-- **Start Time:** `2025-02-28T05:00:00Z`
-- **End Time:** `2025-03-02T04:59:00Z`
+- **Kick off:** `2025-02-28T05:00:00Z`
+- **Game Start Time:** `2025-02-29T18:30:00Z` (block `10152556`)
+- **Game End Time:** `2025-03-02T04:59:00Z`
 
 ### Details
 The warm-up game is a simple "King of the Hill" game where participants race to call the `ctf()` function and increment a counter. Users will specify an address to be used as the key in the `leaderboard` mapping.
