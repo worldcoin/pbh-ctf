@@ -77,8 +77,7 @@ https://worldcoin.org/world-app?download
 
 
 Once you have the app downloaded, you can provision a new Testnet World ID by clicking this link and following the instructions on the page:
-https://ctf-onboarding.stage-crypto.worldcoin.dev/front
-
+https://pbh-ctf.worldcoin.dev/front/#/register
 
 **IMPORTANT:** Note that the semaphore key generated is not secure and is visible to the registration service. This Testnet identity should not be used for anything other than the PBH CTF event. In the event that you misplace your Testnet World ID, you can revisit the link above and follow the steps again at anytime to see your ID.
 
@@ -117,8 +116,7 @@ contract PBHKotH {
         // Adjust the user's score
         uint256 score = leaderboard[receiver];
 
-        // PBH transactions are weighted 400:1
-        score = msg.sender == entryPoint ? score + 400 : score + 1;
+        score += 1;
         leaderboard[receiver] = score;
 
         // Adjust high score/leader if score > highScore
