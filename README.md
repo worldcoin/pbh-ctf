@@ -33,6 +33,12 @@
 
 <br>
 
+**TL;DR** 
+
+  ⚡️ PBH King of the Hill - 🏎️ 3k USDC Winner takes all 🏎️ 
+
+  ⚡️ PBH Security Track - 🔒 Up to 40k USDC in available bounties 🔒
+
 # Table of Contents
 
 - [Overview](#overview)
