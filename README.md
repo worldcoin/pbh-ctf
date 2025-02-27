@@ -140,14 +140,10 @@ This portion of the CTF event is focused on breaking PBH invariants.
 There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
 It is important to note that if the builder block is not selected, these conditions are not enforced.
 
-Each invariant has a **maximum total bounty of $10k USDC**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
-
-Each submission will be evaluated for validity and severity of impact. If two participants submit the same finding, only the first submission will be paid the bounty. If two participants break an invariant in two distinctly different ways, both will be paid a separate bounty. 
-If there are `n` valid findings, the max bounty for the invariant will be distributed to the participants who submitted the findings (ex. $10k USDC distributed across `n` teams). 
-For clarity, there is a max
+The **total bounty for each invariant is capped at $10k**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
 
 Bounty distribution will follow the rules below:
-- Each submission will be evaluated for validity and severity of impact. The **total bounty for each invariant is capped at $10k**. 
+- Each submission will be evaluated for validity and severity of impact. Each valid submission will be evaluated for a portion of the bounty. The **total bounty for each invariant capped at $10k**. 
 - If multiple participants submit the **same finding**, only the first valid submission will be evaluated for a bounty.
 - If multiple participants break an invariant in **distinctly different ways**, each submission will be evaluated for a separate bounty.
 - If there are `n` distinct valid findings for an invariant, the **total bounty for that invariant remains capped at $10k**, and each submission will be evaluated for a bounty.
