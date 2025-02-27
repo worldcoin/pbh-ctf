@@ -147,6 +147,7 @@ Bounty distribution will follow the rules below:
 - If multiple participants submit the **same finding**, only the first valid submission will be evaluated for a bounty.
 - If multiple participants break an invariant in **distinctly different ways**, each submission will be evaluated for a separate bounty.
 - If there are `n` distinct valid findings for an invariant, the **total bounty for that invariant remains capped at $10k**, and each submission will be evaluated for a bounty.
+- Bounties may not be distributed to participants if it is determined that their submission or the payment of a bounty would violate applicable laws.
 
 
 Participants can submit findings via this link: (Link to be added)
