@@ -145,7 +145,7 @@ contract PBHKotH {
 ### Details
 This portion of the CTF event is focused on breaking PBH invariants. 
 There are four invariants that should always hold true when the World Chain Builder is producing blocks. 
-It is important to note that if the builder block is not selected, these conditions are not enforced.
+It is important to note that if the builder block is not selected, these conditions are not enforced. Participants can verify if the World Chain Builder built a specific block by querying the [builtBlock mapping in the WorldChainBlockRegistry contract](https://worldchain-sepolia.explorer.alchemy.com/address/0x46CD6926427A2190310eBA2BF713F0EF51dFB59F?tab=read_write_contract).
 
 The **total bounty for each invariant is capped at $10k**, regardless of the number of valid submissions. Participants that submit a valid proof of concept and write-up demonstrating how to break an invariant will be eligible for a portion of the bounty.
 
