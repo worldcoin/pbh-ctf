@@ -136,6 +136,21 @@ contract PBHKotH {
 }
 ```
 
+### Starter bot installation
+
+To install the PBH CTF binary run the following command:
+
+```shell
+cargo install --path crates/pbh-ctf
+```
+
+Then to run the binary run:
+```shell
+pbh_koth
+```
+
+Remember to set the proper fields in the `pbh_koth.toml` and set the `PRIVATE_KEY` environment variable with your private key.
+
 <br>
 
 ## Break PBH Track
