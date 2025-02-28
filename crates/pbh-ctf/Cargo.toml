@@ -42,5 +42,5 @@ tokio.workspace = true
 
 
 [[bin]]
-name = "pbh_koth"
+name = "pbh-ctf"
 path = "bin/pbh_koth.rs"

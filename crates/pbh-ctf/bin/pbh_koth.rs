@@ -21,7 +21,7 @@ use reqwest::Url;
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
-    let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("bin/pbh_koth.toml");
+    let config_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("bin/pbh_ctf.toml");
     let config = CTFConfig::load(Some(config_path.as_path()))?;
     let private_key = std::env::var("PRIVATE_KEY")?;
     let signer = private_key.parse::<PrivateKeySigner>()?;
