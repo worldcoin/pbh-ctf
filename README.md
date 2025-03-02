@@ -184,7 +184,7 @@ For any block built by the World Chain Builder, the following invariants must ho
 
 - **PBH Block Limit**: The total PBH gas in a block must not exceed `pbhBlockCapacity`.
 
-- **PBH Ordering Rules**: All PBH transactions must be ordered before non-PBH transactions in a block.
+- **PBH Ordering Rules**: All PBH transactions must be ordered before non-PBH transactions in a block, except for sequencer transactions (eg. `setL1BlockValuesEcotone`, Deposit transactions, etc).
 
 <br>
 
