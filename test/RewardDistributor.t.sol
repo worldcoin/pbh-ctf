@@ -38,7 +38,6 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
     address public constant UNISWAP_V3_FACTORY = 0x7a5028BDa40e7B173C278C5342087826455ea25a;
     address public immutable USDC_WETH = IUniswapV3Factory(UNISWAP_V3_FACTORY).getPool(USDC, WETH, 500);
     uint256 public constant REWARD = 3000e6;
-    uint160 internal constant MAX_SQRT_RATIO = 1461446703485210103287273052203988822378723970342;
     uint160 internal constant MIN_SQRT_RATIO = 4295128739;
 
     RewardDistributor public rewardDistributor;
