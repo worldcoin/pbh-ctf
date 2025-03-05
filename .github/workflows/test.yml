@@ -39,5 +39,5 @@ jobs:
 
       - name: Run Forge tests
         run: |
-          forge test -vvv
+          forge test --fork-url "${{ secrets.WORLDCHAIN_PROVIDER }}" -vvv
         id: test
