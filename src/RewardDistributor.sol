@@ -39,7 +39,7 @@ contract RewardDistributor is Ownable2Step {
     /// @notice thrown when a constructor parameter is zero.
     error ZeroValue();
 
-    constructor(address _usdc, address _claimant, uint256 _reward) {
+    constructor(address _usdc, address _claimant, uint256 _reward) Ownable(msg.sender) {
         if (_usdc == address(0) || _claimant == address(0) || _reward == 0) {
             revert ZeroValue();
         }
