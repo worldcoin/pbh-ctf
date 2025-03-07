@@ -5,6 +5,7 @@ import {Test, console} from "forge-std/Test.sol";
 
 import {RewardDistributor} from "../src/RewardDistributor.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract UniswapV3Callback {
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
@@ -34,7 +35,6 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
     address public constant USDC = 0x79A02482A880bCE3F13e09Da970dC34db4CD24d1;
     address public constant WETH = 0x4200000000000000000000000000000000000006;
     address public constant CLAIMANT = address(0xc0ffee);
-    address public constant AUTHORITY = address(0xb00b);
     address public constant UNISWAP_V3_FACTORY = 0x7a5028BDa40e7B173C278C5342087826455ea25a;
     address public immutable USDC_WETH = IUniswapV3Factory(UNISWAP_V3_FACTORY).getPool(USDC, WETH, 500);
     uint256 public constant REWARD = 3000e6;
@@ -46,7 +46,7 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
         vm.deal(address(this), type(uint128).max);
         IWeth(WETH).deposit{value: type(uint128).max}();
         IUniswapV3Pool(USDC_WETH).swap(address(this), true, 2e18, MIN_SQRT_RATIO + 1, abi.encode(WETH));
-        rewardDistributor = new RewardDistributor(USDC, AUTHORITY, CLAIMANT, REWARD);
+        rewardDistributor = new RewardDistributor(USDC, CLAIMANT, REWARD);
         IERC20(USDC).transfer(address(rewardDistributor), REWARD);
     }
 
@@ -60,23 +60,31 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
 
     function testClaim() public {
         // Claim the reward
-        vm.prank(CLAIMANT);
+        vm.startPrank(CLAIMANT);
         rewardDistributor.claim(CLAIMANT);
         assertEq(IERC20(USDC).balanceOf(CLAIMANT), REWARD);
+        vm.expectRevert(RewardDistributor.Locked.selector);
+        rewardDistributor.claim(CLAIMANT);
     }
 
     // Skim
-    function test_Skim() public {
-        vm.prank(AUTHORITY);
-        rewardDistributor.skim(AUTHORITY, REWARD);
-        assertEq(IERC20(USDC).balanceOf(AUTHORITY), REWARD);
+    function test_withdrawFunds() public {
+        uint256 balanceBefore = IERC20(USDC).balanceOf(address(this));
+        rewardDistributor.withdrawFunds(USDC, address(this), REWARD);
+        uint256 balanceAfter = IERC20(USDC).balanceOf(address(this));
+        assertEq(balanceBefore + REWARD, balanceAfter);
     }
 
-    function testFuzz_Skim_RevertIf_Unauthorized(address authority) public {
-        vm.assume(authority != AUTHORITY);
+    function testFuzz_withdrawFunds_RevertIf_Unauthorized(address authority) public {
+        vm.assume(authority != address(this));
+
+        uint256 balanceBefore = IERC20(USDC).balanceOf(address(this));
+
         vm.prank(authority);
-        vm.expectRevert(RewardDistributor.Unauthorized.selector);
-        rewardDistributor.skim(authority, REWARD);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, authority));
+        rewardDistributor.withdrawFunds(authority, address(this), REWARD);
+
+        assertEq(IERC20(USDC).balanceOf(address(this)), balanceBefore);
     }
 }
 
