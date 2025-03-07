@@ -60,9 +60,11 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
 
     function testClaim() public {
         // Claim the reward
-        vm.prank(CLAIMANT);
+        vm.startPrank(CLAIMANT);
         rewardDistributor.claim(CLAIMANT);
         assertEq(IERC20(USDC).balanceOf(CLAIMANT), REWARD);
+        vm.expectRevert(RewardDistributor.Locked.selector);
+        rewardDistributor.claim(CLAIMANT);
     }
 
     // Skim

@@ -20,11 +20,19 @@ contract RewardDistributor is Ownable2Step {
     /// @notice Amount of USDC to be distributed to the `claimant`.
     uint256 public immutable reward;
 
+    /// @notice boolean indicating if the reward has been claimed.
+    bool internal locked;
+
     modifier onlyClaimant() {
         if (msg.sender != claimant) {
             revert Unauthorized();
         }
 
+        if (locked) {
+            revert Locked();
+        }
+
+        locked = true;
         _;
     }
 
@@ -38,6 +46,9 @@ contract RewardDistributor is Ownable2Step {
 
     /// @notice thrown when a constructor parameter is zero.
     error ZeroValue();
+
+    /// @notice Throws if the reward has already been claimed.
+    error Locked();
 
     constructor(address _usdc, address _claimant, uint256 _reward) Ownable(msg.sender) {
         if (_usdc == address(0) || _claimant == address(0) || _reward == 0) {
