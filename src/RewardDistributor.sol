@@ -3,10 +3,12 @@ pragma solidity ^0.8.28;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title Reward Distributor
 /// @notice Distributes PBH King of the Hill reward to the winning participant.
-contract RewardDistributor {
+contract RewardDistributor is Ownable2Step {
     using SafeERC20 for IERC20;
 
     /// @notice Address of the USDC.e contract.
@@ -15,18 +17,8 @@ contract RewardDistributor {
     /// @notice Address of the PBH King of the Hill winner.
     address public immutable claimant;
 
-    /// @notice Party authorized to release the reward to the `claimant`.
-    address public immutable authority;
-
     /// @notice Amount of USDC to be distributed to the `claimant`.
     uint256 public immutable reward;
-
-    modifier onlyAuthority() {
-        if (msg.sender != authority) {
-            revert Unauthorized();
-        }
-        _;
-    }
 
     modifier onlyClaimant() {
         if (msg.sender != claimant) {
@@ -47,13 +39,12 @@ contract RewardDistributor {
     /// @notice thrown when a constructor parameter is zero.
     error ZeroValue();
 
-    constructor(address _usdc, address _authority, address _claimant, uint256 _reward) {
-        if (_usdc == address(0) || _authority == address(0) || _claimant == address(0) || _reward == 0) {
+    constructor(address _usdc, address _claimant, uint256 _reward) Ownable(msg.sender) {
+        if (_usdc == address(0) || _claimant == address(0) || _reward == 0) {
             revert ZeroValue();
         }
 
         usdc = IERC20(_usdc);
-        authority = _authority;
         claimant = _claimant;
         reward = _reward;
     }
@@ -65,10 +56,11 @@ contract RewardDistributor {
         emit RewardClaimed(claimant, reward);
     }
 
-    /// @notice Function to skim any superfelous funds from the contract.
+    /// @notice Function to withdraw any superfelous funds from the contract.
+    /// @param token Address of the token to be withdrawn.
     /// @param receiver Address where the funds will be transferred.
     /// @param value Amount of USDC to be transferred.
-    function skim(address receiver, uint256 value) external onlyAuthority {
-        usdc.safeTransfer(receiver, value);
+    function withdrawFunds(address token, address receiver, uint256 value) external onlyOwner {
+        IERC20(token).safeTransfer(receiver, value);
     }
 }
