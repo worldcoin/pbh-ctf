@@ -5,6 +5,7 @@ import {Test, console} from "forge-std/Test.sol";
 
 import {RewardDistributor} from "../src/RewardDistributor.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract UniswapV3Callback {
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
@@ -66,17 +67,19 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
 
     // Skim
     function test_withdrawFunds() public {
+        uint256 balanceBefore = IERC20(USDC).balanceOf(address(this));
         rewardDistributor.withdrawFunds(USDC, address(this), REWARD);
-        assertEq(IERC20(USDC).balanceOf(USDC), REWARD);
+        uint256 balanceAfter = IERC20(USDC).balanceOf(address(this));
+        assertEq(balanceBefore + REWARD, balanceAfter);
     }
 
     function testFuzz_withdrawFunds_RevertIf_Unauthorized(address authority) public {
         vm.assume(authority != address(this));
-        vm.prank(authority);
 
         uint256 balanceBefore = IERC20(USDC).balanceOf(address(this));
 
-        vm.expectRevert(RewardDistributor.Unauthorized.selector);
+        vm.prank(authority);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, authority));
         rewardDistributor.withdrawFunds(authority, address(this), REWARD);
 
         assertEq(IERC20(USDC).balanceOf(address(this)), balanceBefore);
