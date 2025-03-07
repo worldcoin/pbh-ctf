@@ -51,20 +51,24 @@ contract RewardDistributorTest is UniswapV3Callback, Test {
     }
 
     // Claim
-    function testFuzz_Claim_RevertIf_Unauthorized(address claimant, address receiver) public {
+    function testFuzz_Claim_RevertIf_Unauthorized(address claimant) public {
         vm.assume(claimant != CLAIMANT);
         vm.prank(claimant);
         vm.expectRevert(RewardDistributor.Unauthorized.selector);
-        rewardDistributor.claim(receiver);
+        rewardDistributor.claim();
     }
 
     function testClaim() public {
+        assertEq(IERC20(USDC).balanceOf(CLAIMANT), 0);
+
         // Claim the reward
         vm.startPrank(CLAIMANT);
-        rewardDistributor.claim(CLAIMANT);
+        rewardDistributor.claim();
         assertEq(IERC20(USDC).balanceOf(CLAIMANT), REWARD);
+
+        vm.startPrank(CLAIMANT);
         vm.expectRevert(RewardDistributor.Locked.selector);
-        rewardDistributor.claim(CLAIMANT);
+        rewardDistributor.claim();
     }
 
     // Skim

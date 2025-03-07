@@ -32,7 +32,6 @@ contract RewardDistributor is Ownable2Step {
             revert Locked();
         }
 
-        locked = true;
         _;
     }
 
@@ -61,9 +60,9 @@ contract RewardDistributor is Ownable2Step {
     }
 
     /// @notice Function to claim the reward.
-    /// @param receiver Address where the reward will be transferred.
-    function claim(address receiver) external onlyClaimant {
-        usdc.safeTransfer(receiver, reward);
+    function claim() external onlyClaimant {
+        locked = true;
+        usdc.safeTransfer(claimant, reward);
         emit RewardClaimed(claimant, reward);
     }
 
